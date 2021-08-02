@@ -1,13 +1,71 @@
+:root {
+	--theme: rgb(39, 39, 39);
+	--glass-theme: rgba(39, 39, 39, 0.848);
+	--accent: #1976d2;
+}
+
+@font-face {
+	font-family: Montserrat;
+	src: url("./Resources/Fonts/Montserrat/Montserrat-Light.ttf");
+}
+
+@font-face {
+	font-family: Roboto;
+	src: url("./Resources/Fonts/Roboto/RobotoMono-Medium.ttf");
+}
+
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	margin: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+		"Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+		sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+		monospace;
+}
+
+div {
+	box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+	display: none;
+}
+
+.glass {
+	background-color: rgba(255, 255, 255, 0.15);
+	backdrop-filter: blur(5px);
+
+	/* -webkit-animation-name: bounceIn;
+	animation-name: bounceIn;
+	-webkit-animation-duration: 1s;
+	animation-duration: 1s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both; */
+}
+
+.drag-window {
+	-webkit-app-region: drag;
+	/* user-select: none;
+	-webkit-user-select: none; */
+}
+
+.hideScroll::-webkit-scrollbar {
+	display: none;
+}
+
+.bounce-on-click {
+	outline: none;
+	border: none;
+	transition: 0.1s ease-in-out;
+	background: none;
+	cursor: pointer;
+}
+
+.bounce-on-click:active {
+	transform: scale(0.9);
 }

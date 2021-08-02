@@ -1,0 +1,24 @@
+.home {
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	position: relative;
+	/* box-shadow: 0 2px 5px rgba(120, 120, 120, 0.25); */
+	/* box-shadow: 0 2px 105px red; */
+
+	scroll-snap-align: start;
+}
+
+.home-superior {
+	scroll-snap-type: y mandatory;
+	height: 100%;
+	overflow: scroll;
+}
+
+.home-bg {
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+	position: absolute;
+	z-index: -10;
+}

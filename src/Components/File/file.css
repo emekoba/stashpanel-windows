@@ -1,0 +1,98 @@
+.file {
+	height: 21vw;
+	width: 21vw;
+	position: absolute;
+	box-shadow: 0 2px 5px rgba(41, 41, 41, 0.25);
+	cursor: pointer;
+	z-index: 10;
+	padding: 5px;
+	/* animation: drop-animation 1.2s forwards; */
+}
+
+.file:hover {
+	filter: brightness(1.2);
+}
+
+.file-image {
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+}
+
+.file-options {
+	position: absolute;
+	top: -10;
+	right: -30;
+	background: var(--glass-theme);
+	height: 17vw;
+	width: 16vw;
+}
+
+.file-loading {
+	position: absolute;
+	height: 3vw;
+	width: 3vw;
+	bottom: 0;
+	right: 0;
+	margin-bottom: 15px;
+	margin-right: 8px;
+}
+
+.video-type {
+	width: 35vw !important;
+}
+
+.file-type-indicator {
+	font-size: 10px;
+	position: absolute;
+	background-color: tomato;
+	padding: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	left: -10px;
+}
+
+@keyframes drop-animation {
+	from {
+		height: 21vw;
+		width: 21vw;
+	}
+
+	to {
+		height: 10vw;
+		width: 10vw;
+	}
+
+	to {
+		height: 21vw;
+		width: 21vw;
+	}
+}
+
+@media only screen and (min-width: 510px) {
+	.file {
+		height: 100px;
+		width: 100px;
+	}
+
+	.video-type {
+		width: 180px !important;
+	}
+
+	@keyframes drop-animation {
+		from {
+			height: 100px;
+			width: 100px;
+		}
+
+		to {
+			height: 50px;
+			width: 50px;
+		}
+
+		to {
+			height: 100px;
+			width: 100px;
+		}
+	}
+}

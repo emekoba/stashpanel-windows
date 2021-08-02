@@ -1,0 +1,55 @@
+.stashpanel {
+	position: relative;
+	height: 100vh;
+}
+
+.close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 20px;
+	cursor: pointer;
+}
+
+.doubledown {
+	position: absolute;
+	/* bottom: 100; */
+	right: 30;
+	width: 20px;
+	cursor: pointer;
+}
+
+.open-archive {
+	height: 5vw;
+	background: var(--glass-theme);
+	width: 5vw;
+	bottom: 0;
+	right: 0;
+	position: absolute;
+	border-top-left-radius: 20px;
+	cursor: pointer;
+	display: grid;
+	place-items: center;
+	padding-top: 2px;
+	padding-left: 2px;
+	z-index: 10;
+}
+
+.open-archive > img {
+	width: 2.1vw;
+	height: 2.1vw;
+	object-fit: contain;
+}
+
+@media only screen and (min-width: 510px) {
+	.open-archive {
+		height: 30px;
+		width: 30px;
+		border-top-left-radius: 22px;
+	}
+
+	.open-archive > img {
+		width: 15px;
+		height: 15px;
+	}
+}
