@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./menubar.css";
-import { pr3, drag2, devices2, settings2 } from "../../Resources/Resources";
+import { pr3, devices2, settings2 } from "../../Resources/Resources";
 
 export default function MenuBar({ onClick }) {
 	const [menuopen, setmenuopen] = useState(false);
@@ -20,7 +20,7 @@ export default function MenuBar({ onClick }) {
 					each.style.display = `${menuopen ? "flex" : "none"}`;
 				});
 			},
-			menuopen ? 400 : 150
+			menuopen ? 500 : 100
 		);
 
 		setTimeout(() => {
@@ -35,11 +35,11 @@ export default function MenuBar({ onClick }) {
 	}
 
 	function onMenubarHover() {
-		// setmenuopen(true);
+		setmenuopen(true);
 	}
 
 	function onMenubarLeave() {
-		// setmenuopen(false);
+		setmenuopen(false);
 	}
 
 	return (
@@ -49,24 +49,18 @@ export default function MenuBar({ onClick }) {
 				onMouseEnter={onMenubarHover}
 				onMouseLeave={onMenubarLeave}
 			>
-				<img alt="" className="menubar-item bounce-on-click" />
+				<img alt="" src={devices2} className="menubar-item bounce-on-click" />
 
-				<img alt="" className="menubar-item bounce-on-click" />
+				<img alt="" src={devices2} className="menubar-item bounce-on-click" />
 
-				<img alt="" className="menubar-item bounce-on-click" />
+				<img alt="" src={devices2} className="menubar-item bounce-on-click" />
 
 				<img alt="" src={settings2} className="menubar-item bounce-on-click" />
-
-				<img
-					alt=""
-					src={drag2}
-					className="menubar-item drag-window grabbable"
-				/>
 			</div>
 
 			<img
 				alt=""
-				onClick={avatarClicked}
+				// onClick={avatarClicked}
 				alt=""
 				className="avatar glass"
 				src={pr3}
@@ -75,4 +69,8 @@ export default function MenuBar({ onClick }) {
 			/>
 		</div>
 	);
+}
+
+{
+	/* <img alt="" src={drag2} className="menubar-item drag-window grabbable" />; */
 }

@@ -2,14 +2,14 @@
 	width: 100vw;
 	background: red;
 	position: absolute;
-	z-index: 1000;
+	z-index: var(--menubar-index);
 	padding-left: 20px;
 	margin-top: 20px;
 }
 
 .avatar {
-	height: 8vw;
-	width: 8vw;
+	height: 40px;
+	width: 40px;
 	border-radius: 50%;
 	position: absolute;
 	cursor: pointer;
@@ -18,38 +18,23 @@
 }
 
 .menubar {
-	width: 45vw;
-	height: 8vw;
+	height: 40px;
 	display: flex;
 	align-items: center;
 	border-radius: 4vw;
 	position: absolute;
-	background: var(--glass-theme);
+	background: var(--dark-glass);
 	justify-content: space-between;
 	padding-right: 15px;
 	padding-left: 50px;
-}
-
-.menubar-item {
-	width: 4vw;
-	height: 4vw;
-	border: none;
-	outline: none;
 	cursor: pointer;
 }
 
-.grabbable:hover {
-	cursor: move; /* fallback if grab cursor is unsupported */
-	cursor: grab;
-	cursor: -moz-grab;
-	cursor: -webkit-grab;
-}
-
-/* (Optional) Apply a "closed-hand" cursor during drag operation. */
-.grabbable:active {
-	cursor: grabbing;
-	cursor: -moz-grabbing;
-	cursor: -webkit-grabbing;
+.menubar-item {
+	height: 20px;
+	width: 20px;
+	border: none;
+	outline: none;
 }
 
 @keyframes slide-from-left {
@@ -59,59 +44,19 @@
 	}
 
 	to {
-		width: 45vw;
-		background: var(--glass-theme);
+		width: 200px;
+		background: var(--dark-glass);
 	}
 }
 
 @keyframes slide-from-right {
 	from {
-		width: 45vw;
-		background: var(--glass-theme);
+		width: 200px;
+		background: var(--dark-glass);
 	}
 
 	to {
 		width: 0vw;
 		background: transparent;
-	}
-}
-
-@media only screen and (min-width: 510px) {
-	.avatar {
-		height: 40px;
-		width: 40px;
-	}
-
-	.menubar {
-		height: 40px;
-	}
-
-	.menubar-item {
-		height: 20px;
-		width: 20px;
-	}
-
-	@keyframes slide-from-left {
-		from {
-			width: 0vw;
-			background: transparent;
-		}
-
-		to {
-			width: 230px;
-			background: var(--glass-theme);
-		}
-	}
-
-	@keyframes slide-from-right {
-		from {
-			width: 230px;
-			background: var(--glass-theme);
-		}
-
-		to {
-			width: 0vw;
-			background: transparent;
-		}
 	}
 }

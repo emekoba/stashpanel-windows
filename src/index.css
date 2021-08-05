@@ -1,7 +1,22 @@
 :root {
 	--theme: rgb(39, 39, 39);
-	--glass-theme: rgba(39, 39, 39, 0.848);
+	--glass: rgba(255, 255, 255, 0.15);
+	--dark-glass: rgba(39, 39, 39, 0.848);
 	--accent: #1976d2;
+	--file-size: 100px;
+	--file-responsive-size: 21vw;
+
+	--home-bg-index: -10;
+	--file-index: 10;
+	--file-loader-index: 10;
+	--window-menu-index: 100;
+	--viewer-index: 400;
+	--file-options-menu-index: 400;
+	--home-menu-index: 400;
+	--text-editor-index: 400;
+	--file-options-index: 500;
+	--viewer-index: 800;
+	--menubar-index: 1000;
 }
 
 @font-face {
@@ -23,6 +38,20 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 
+body div button {
+	-webkit-touch-callout: none !important;
+	-webkit-user-select: none !important;
+	-khtml-user-select: none !important;
+	-moz-user-select: none !important;
+	-ms-user-select: none !important;
+	user-select: none !important;
+	-webkit-tap-highlight-color: transparent !important;
+}
+
+body:focus div:focus button:focus {
+	outline: none !important;
+}
+
 code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 		monospace;
@@ -32,26 +61,49 @@ div {
 	box-sizing: border-box;
 }
 
+button {
+	outline: none;
+	border: none;
+	transition: 0.1s ease-in-out;
+	background: none;
+	cursor: pointer;
+}
+
+button:active {
+	transform: scale(0.9);
+}
+
 ::-webkit-scrollbar {
 	display: none;
 }
 
-.glass {
-	background-color: rgba(255, 255, 255, 0.15);
-	backdrop-filter: blur(5px);
+/* .glass {
 
-	/* -webkit-animation-name: bounceIn;
+	-webkit-animation-name: bounceIn;
 	animation-name: bounceIn;
 	-webkit-animation-duration: 1s;
 	animation-duration: 1s;
 	-webkit-animation-fill-mode: both;
-	animation-fill-mode: both; */
-}
+	animation-fill-mode: both;
+} */
 
 .drag-window {
 	-webkit-app-region: drag;
 	/* user-select: none;
 	-webkit-user-select: none; */
+}
+
+.drag-window:hover {
+	cursor: move !important;
+	cursor: grab !important;
+	cursor: -moz-grab !important;
+	cursor: -webkit-grab !important;
+}
+
+.drag-window:active {
+	cursor: grabbing !important;
+	cursor: -moz-grabbing !important;
+	cursor: -webkit-grabbing !important;
 }
 
 .hideScroll::-webkit-scrollbar {

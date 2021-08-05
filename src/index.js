@@ -5,14 +5,18 @@ import StashPanel from "./StashPanel";
 import reportWebVitals from "./reportWebVitals";
 import { Control } from "./State/Control";
 import Firebase, { FirebaseContext } from "./Services/firebase.service";
+import { theme } from "./Global/Theme";
+import { MuiThemeProvider } from "@material-ui/core";
 
 ReactDOM.render(
 	<React.StrictMode>
-		<Control>
-			{/* <FirebaseContext.Provider value={new Firebase()}> */}
-			<StashPanel />
-			{/* </FirebaseContext.Provider> */}
-		</Control>
+		<MuiThemeProvider theme={theme}>
+			<Control>
+				{/* <FirebaseContext.Provider value={new Firebase()}> */}
+				<StashPanel />
+				{/* </FirebaseContext.Provider> */}
+			</Control>
+		</MuiThemeProvider>
 	</React.StrictMode>,
 	document.getElementById("root")
 );

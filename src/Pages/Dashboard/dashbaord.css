@@ -1,6 +1,6 @@
 .dashboard {
 	height: 100vh;
-	background: var(--glass-theme);
+	background: var(--dark-glass);
 	scroll-snap-align: start;
 	color: white;
 	padding-top: 80px;

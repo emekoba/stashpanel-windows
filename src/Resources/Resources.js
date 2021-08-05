@@ -32,6 +32,16 @@ import settings from "./Icons/settings.png";
 import settings2 from "./Icons/settings2.png";
 import settings_animated from "./Icons/settings-animated.gif";
 import menu from "./Icons/menu.png";
+import CloseIcon from "@material-ui/icons/Close";
+import MenuIcon from "@material-ui/icons/Menu";
+import MinimizeIcon from "@material-ui/icons/Minimize";
+import DeleteIcon from "@material-ui/icons/Delete";
+import delete_icon from "./Icons/delete.png";
+import stash from "./Icons/stash.png";
+import imageType from "./Icons/image-type2.png";
+import codeType from "./Icons/code-type.png";
+import editImage from "./Icons/edit-image.png";
+import videoType from "./Icons/video-type.png";
 
 export {
 	bg1,
@@ -66,4 +76,14 @@ export {
 	settings,
 	settings2,
 	settings_animated,
+	CloseIcon,
+	MenuIcon,
+	MinimizeIcon,
+	DeleteIcon,
+	stash,
+	delete_icon,
+	imageType,
+	codeType,
+	editImage,
+	videoType,
 };

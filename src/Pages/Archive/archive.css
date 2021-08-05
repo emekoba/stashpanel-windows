@@ -1,11 +1,25 @@
 .archive {
 	height: 100vh;
-	background: var(--glass-theme);
+	background: var(--dark-glass);
 	scroll-snap-align: start;
 	color: white;
 	padding-top: 80px;
 	padding-left: 15px;
 	padding-right: 15px;
+	position: relative;
+}
+
+.archive-header {
+	height: 50px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: grid;
+	place-items: center;
+	padding-left: 20px;
+	padding-right: 20px;
+	background: var(--dark-glass);
+	font-weight: bold;
 }
 
 .date-stamp {
@@ -25,4 +39,5 @@
 	height: 100%;
 	overflow-y: scroll;
 	padding-bottom: 300px;
+	padding-top: 5px;
 }
