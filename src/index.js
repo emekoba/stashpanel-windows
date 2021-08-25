@@ -4,19 +4,26 @@ import "./index.css";
 import StashPanel from "./StashPanel";
 import reportWebVitals from "./reportWebVitals";
 import { Control } from "./State/Control";
-import Firebase, { FirebaseContext } from "./Services/firebase.service";
+// import Firebase, { FirebaseContext } from "./Services/firebase.service";
 import { theme } from "./Global/Theme";
 import { MuiThemeProvider } from "@material-ui/core";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import globalReducer from "./State/GlobalReducer";
+
+const store = createStore(globalReducer);
 
 ReactDOM.render(
 	<React.StrictMode>
-		<MuiThemeProvider theme={theme}>
-			<Control>
-				{/* <FirebaseContext.Provider value={new Firebase()}> */}
-				<StashPanel />
-				{/* </FirebaseContext.Provider> */}
-			</Control>
-		</MuiThemeProvider>
+		<Provider store={store}>
+			<MuiThemeProvider theme={theme}>
+				<Control>
+					{/* <FirebaseContext.Provider value={new Firebase()}> */}
+					<StashPanel />
+					{/* </FirebaseContext.Provider> */}
+				</Control>
+			</MuiThemeProvider>
+		</Provider>
 	</React.StrictMode>,
 	document.getElementById("root")
 );

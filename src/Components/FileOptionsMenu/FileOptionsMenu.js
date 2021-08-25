@@ -40,11 +40,12 @@ export default function FileOptionsMenu({ isOpen, menuItemPressed }) {
 	return (
 		<div className="file-options-menu" onClick={(e) => e.stopPropagation()}>
 			{Object.keys(menuBtns).map((key) => (
-				<Tooltip placement="left" title={<div>{key}</div>}>
+				<Tooltip key={key} placement="left" title={<div>{key}</div>}>
 					<img
 						style={_x.menuItem}
 						src={menuBtns[key].icon}
 						onClick={() => menuItemPressed(key)}
+						alt={key}
 					/>
 				</Tooltip>
 			))}

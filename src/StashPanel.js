@@ -1,11 +1,246 @@
 import "./stashpanel.css";
 import Home from "./Pages/Home/Home";
-import Footer from "./Components/Footer/Footer";
 import MenuBar from "./Components/MenuBar/MenuBar";
-import { menu, CloseIcon, MenuIcon, MinimizeIcon } from "./Resources/Resources";
+import { CloseIcon, MenuIcon, MinimizeIcon } from "./Resources/Resources";
+import firebase, { database } from "./Services/firebase.service";
+import { useEffect, useState } from "react";
+import Onboarding from "./Pages/Onboarding/Onboarding";
+import Loader, { LoaderState } from "./Components/Loader/Loader";
+import { DispatchCommands } from "./State/GlobalReducer";
+import { FileState } from "./Components/File/File";
+import { connect } from "react-redux";
+import { isObject } from "./Global/Globals";
 
-function StashPanel() {
-	function toggleArchive() {}
+function StashPanel({
+	userId,
+	collectionId,
+	startLoader,
+	stopLoader,
+	updateUserId,
+	addFilesToStage,
+	addFilesToStash,
+	clearStageAndStash,
+	panelOnline,
+	toggleNetworkStatus,
+	updateSettings,
+}) {
+	const [isLoggedIn, setIsLoggedIn] = useState(true);
+
+	//! use whatsapp alert for stashpanel alerts when new file is staged.........
+
+	useEffect(() => {
+		if (!panelOnline) {
+			console.log("%c panel online", "color:limegreen");
+
+			startLoader(LoaderState.LOADING);
+
+			database
+				.collection("panel-collections")
+				.doc(collectionId)
+				.get()
+				.then((doc) => {
+					console.log(
+						"%c panel collection reads (for mine and other devices)",
+						"color:lightblue"
+					);
+
+					const all_other_users = [];
+
+					if (doc.data()) {
+						const _other_users = doc.data().members.filter((e) => e !== userId);
+						_other_users.map((each_user) => all_other_users.push(each_user));
+					}
+
+					fetchOtherUsersDevices(all_other_users);
+				});
+
+			fetchMyDevice(userId);
+		} else {
+			console.log("%c panel offline", "color:tomato");
+
+			startLoader(LoaderState.OFFLINE);
+		}
+	}, [collectionId, panelOnline]);
+
+	useEffect(() => {
+		firebase?.auth().onAuthStateChanged((user) => {
+			if (user) {
+				updateUserId(user.uid);
+
+				setIsLoggedIn(true);
+			} else {
+				//? if no longer logged in switch to onboarding
+
+				setIsLoggedIn(false);
+
+				clearStageAndStash();
+			}
+		});
+	}, []);
+
+	useEffect(() => {
+		// async function checkOnlineStatus() {
+		// 	try {
+		// 		const online = await fetch("/1pixel.png");
+		// 		return online.status >= 200 && online.status < 300;
+		// 	} catch (err) {
+		// 		return false;
+		// 	}
+		// }
+
+		// window.addEventListener("load", async () =>
+		// 	toggleNetworkStatus(await checkOnlineStatus())
+		// );
+
+		window.addEventListener("online", () => {
+			console.log(true);
+
+			toggleNetworkStatus(true);
+		});
+
+		window.addEventListener("offline", () => {
+			console.log(false);
+
+			toggleNetworkStatus(false);
+		});
+	}, []);
+
+	function fetchMyDevice(userId) {
+		database
+			.collection("devices")
+			.where("owner", "==", userId)
+			.get()
+			.then((device_docs) => {
+				console.log("%c device reads (for my device)", "color:lightblue");
+
+				device_docs.docs.forEach((doc) => {
+					const _files = doc.data()["files"];
+
+					queryMultipleFiles(_files, {
+						isExternal: false,
+						sortFiles: true,
+					}).then((fetched_files) => {
+						addFilesToStage(fetched_files["staged"]);
+						addFilesToStash(fetched_files["stashed"]);
+
+						stopLoader();
+					});
+				});
+			});
+	}
+
+	function fetchOtherUsersDevices(allUsersArray) {
+		let _all_device_files = [];
+
+		database
+			.collection("devices")
+			.where("owner", "in", allUsersArray.slice(0, 10))
+			.onSnapshot(
+				{
+					includeMetadataChanges: true,
+				},
+				(device_snapshot) => {
+					console.log("%c device reads (for other devices)", "color:lightblue");
+
+					device_snapshot.docs.forEach((doc, idx) => {
+						let _each_device_in_collection = doc.data();
+
+						const _files = _each_device_in_collection["files"];
+
+						_all_device_files.push(_files);
+					});
+
+					_all_device_files = [].concat.apply([], _all_device_files);
+
+					queryMultipleFiles(_all_device_files, { isExternal: true }).then(
+						(staged_files) => addFilesToStage(staged_files)
+					);
+				}
+			);
+	}
+
+	function queryMultipleFiles(fileArray, options) {
+		let pure_array = [];
+
+		let file_deck = {};
+
+		let sorted_file_deck = {};
+
+		fileArray.map((e) => pure_array.push(e["fileId"]));
+
+		return database
+			.collection("files")
+			.where(
+				firebase.firestore.FieldPath.documentId(),
+				"in",
+				pure_array.slice(0, 10)
+			)
+			.get()
+			.then((file_snapshot) => {
+				console.log("%c file reads", "color:lightblue");
+
+				file_snapshot.docs.forEach((eachFile) => {
+					const _file_data = eachFile.data();
+
+					if (options.sortFiles) {
+						Object.keys(fileArray).map((key) => {
+							if (fileArray[key]["fileId"] === eachFile.id) {
+								if (fileArray[key]["status"] === "staged") {
+									sorted_file_deck["staged"] = {
+										...sorted_file_deck["staged"],
+										[`${eachFile.id}`]: {
+											id: eachFile.id,
+											type: _file_data?.["type"] ?? "image",
+											link: _file_data?.["link"],
+											date: _file_data?.["createdAt"],
+											x: _file_data?.["x"],
+											y: _file_data?.["y"],
+											name: _file_data?.["name"],
+											progress: 0,
+											isExternal: options?.isExternal,
+											fileState: FileState.STAGED,
+										},
+									};
+								}
+
+								if (fileArray[key]["status"] === "stashed") {
+									sorted_file_deck["stashed"] = {
+										...sorted_file_deck["stashed"],
+										[`${eachFile.id}`]: {
+											id: eachFile.id,
+											type: _file_data?.["type"] ?? "image",
+											link: _file_data?.["link"],
+											date: _file_data?.["createdAt"],
+											x: _file_data?.["x"],
+											y: _file_data?.["y"],
+											name: _file_data?.["name"],
+											progress: 0,
+											isExternal: options?.isExternal,
+											fileState: FileState.STASHED,
+										},
+									};
+								}
+							}
+						});
+					} else {
+						file_deck[`${eachFile.id}`] = {
+							id: eachFile.id,
+							type: _file_data?.["type"] ?? "image",
+							link: _file_data?.["link"],
+							date: _file_data?.["createdAt"],
+							x: _file_data?.["x"],
+							y: _file_data?.["y"],
+							name: _file_data?.["name"],
+							progress: 0,
+							isExternal: options?.isExternal,
+							fileState: FileState.STAGED,
+						};
+					}
+				});
+
+				return options.sortFiles ? sorted_file_deck : file_deck;
+			});
+	}
 
 	return (
 		<div className="stashpanel">
@@ -23,24 +258,79 @@ function StashPanel() {
 				</div>
 			</div>
 
-			<MenuBar />
+			<Loader />
 
-			<Home />
-
-			{/* <img className="close" src={close} /> */}
-
-			{/* <img src={down} className="doubledown" /> */}
-
-			{/* <Footer /> */}
-
-			{/* <div className="open-archive" onClick={toggleArchive}>
-				<img className="bounce-on-click" src={menu} />
-			</div> */}
+			{isLoggedIn ? (
+				<>
+					<MenuBar />
+					<Home />
+				</>
+			) : (
+				<Onboarding />
+			)}
 		</div>
 	);
 }
 
-export default StashPanel;
+function mapStateToProps(state) {
+	return {
+		userId: state.userId,
+		collectionId: state.collectionId,
+		panelOnline: state.panelOnline,
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		startLoader: (loadState) =>
+			dispatch({
+				type: DispatchCommands.START_LOADER,
+				payload: loadState,
+			}),
+
+		stopLoader: () =>
+			dispatch({
+				type: DispatchCommands.STOP_LOADER,
+			}),
+
+		addFilesToStage: (files) =>
+			dispatch({
+				type: DispatchCommands.ADD_FILES_TO_STAGE,
+				payload: files,
+			}),
+
+		addFilesToStash: (files) =>
+			dispatch({
+				type: DispatchCommands.ADD_FILES_TO_STASH,
+				payload: files,
+			}),
+
+		clearStageAndStash: () =>
+			dispatch({
+				type: DispatchCommands.CLEAR_STASH_AND_STAGE,
+			}),
+
+		updateUserId: (id) =>
+			dispatch({
+				type: DispatchCommands.ADD_FILES_TO_STAGE,
+				payload: id,
+			}),
+
+		toggleNetworkStatus: (isOnline) =>
+			dispatch({
+				type: DispatchCommands.TOGGLE_NETWORK_STATUS,
+				payload: isOnline,
+			}),
+
+		updateSettings: (settings) =>
+			dispatch({
+				type: DispatchCommands.UPDATE_SETTINGS,
+				payload: settings,
+			}),
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(StashPanel);
 
 const _x = {
 	menuItem: { color: "white", fontSize: 12 },

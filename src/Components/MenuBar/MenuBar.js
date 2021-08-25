@@ -10,7 +10,7 @@ export default function MenuBar({ onClick }) {
 
 		bar.style.animation = `${
 			menuopen
-				? "slide-from-left 0.5s forwards"
+				? "slide-from-left 0.3s forwards"
 				: "slide-from-right 0.5s forwards"
 		}`;
 
@@ -25,7 +25,7 @@ export default function MenuBar({ onClick }) {
 
 		setTimeout(() => {
 			bar.style.display = `${menuopen ? "flex" : "none"}`;
-		}, 250);
+		}, 180);
 	}, [menuopen]);
 
 	function onAvatarHovered() {}

@@ -1,0 +1,10 @@
+.settings {
+	height: 100vh;
+	background: var(--dark-glass);
+	scroll-snap-align: start;
+	color: white;
+	padding-top: 80px;
+	padding-left: 15px;
+	padding-right: 15px;
+	position: relative;
+}

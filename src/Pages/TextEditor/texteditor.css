@@ -1,35 +1,37 @@
 .text-editor {
 	position: absolute;
 	width: 100vw;
-	background-color: var(--dark-glass);
+	background: var(--dark-glass);
 	top: 0px;
 	z-index: var(--text-editor-index);
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
+	display: none;
 }
 
 @keyframes open-editor-animation {
 	from {
 		height: 0vh;
-		background: transparent;
+		display: none;
 	}
 
 	to {
 		height: 100vh;
-		background: var(--dark-glass);
+		display: flex;
 	}
 }
 
 @keyframes close-editor-animation {
 	from {
 		height: 100vh;
-		background: var(--dark-glass);
+		display: flex;
 	}
 
 	to {
 		height: 0vh;
-		background: transparent;
+		display: none;
 	}
 }
 

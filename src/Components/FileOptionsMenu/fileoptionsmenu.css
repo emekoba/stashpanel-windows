@@ -1,37 +1,37 @@
 .file-options-menu {
 	position: absolute;
 	height: 100vh;
-	width: 50px;
 	top: 0px;
 	right: 0px;
-	background: var(--dark-glass);
 	z-index: var(--file-options-menu-index);
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	background: var(--dark-glass);
 	padding: 10px;
+	display: none;
 }
 
 @keyframes open-menu-animation {
 	from {
 		width: 0vw;
-		background: transparent;
+		display: none;
 	}
 
 	to {
-		width: 50px;
-		background: var(--dark-glass);
+		width: 45px;
+		display: flex;
 	}
 }
 
 @keyframes close-menu-animation {
 	from {
-		width: 50px;
-		background: var(--dark-glass);
+		width: 45px;
+		display: flex;
 	}
 
 	to {
 		width: 0vw;
-		background: transparent;
+		display: none;
 	}
 }

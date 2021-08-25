@@ -44,3 +44,14 @@
 		/>
 	);
 }
+
+//* stashpanel.js
+{
+	/* <Footer /> */
+}
+
+{
+	/* <div className="open-archive" onClick={toggleArchive}>
+				<img className="bounce-on-click" src={menu} />
+			</div> */
+}

@@ -6,10 +6,11 @@
 	padding: 5px;
 	backdrop-filter: blur(5px);
 	background-color: var(--glass);
+	transition: left 0.5s linear;
 }
 
 .file:hover {
-	filter: brightness(1.2);
+	/* filter: brightness(1.2); */
 }
 
 .file-image {
@@ -46,6 +47,47 @@
 	background-color: var(--dark-glass);
 	padding: 5px;
 	border-radius: 50%;
+	font-size: 3px;
+	color: var(--glass);
+	z-index: 3;
+}
+
+.user-indicator {
+	width: 15px;
+	height: 15px;
+	position: absolute;
+	left: 16px;
+	top: -8px;
+	animation: warp-in 2.2 forwards ease-out;
+	animation-delay: 1s;
+	background-color: var(--dark-glass);
+	padding: 5px;
+	border-radius: 50%;
+	font-size: 3px;
+	color: var(--glass);
+	z-index: 2;
+	object-fit: cover;
+}
+
+.file-drag-handle {
+	height: 16px;
+	width: 16px;
+	cursor: grab;
+	/* background: var(--dark-glass); */
+	background: #1a1a1a;
+	border-radius: 50%;
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	right: -3px;
+	bottom: -3px;
+	display: grid;
+	place-items: center;
+	/* display: none; */
+}
+
+.file-drag-handle:active {
+	cursor: grabbing;
 }
 
 @keyframes warp-in {
@@ -74,5 +116,29 @@
 	to {
 		height: var(--file-size);
 		width: var(--file-size);
+	}
+}
+
+@keyframes file-in-animation {
+	from {
+		height: 0px;
+		width: 0px;
+	}
+
+	to {
+		height: 100px;
+		width: 100px;
+	}
+}
+
+@keyframes file-out-animation {
+	from {
+		height: 100px;
+		width: 100px;
+	}
+
+	to {
+		height: 0px;
+		width: 0px;
 	}
 }

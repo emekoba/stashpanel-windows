@@ -1,11 +1,19 @@
-import React, { useContext } from "react";
+import React from "react";
 import { FileDrop } from "react-file-drop";
-import { storage, addFileToStash } from "../../Services/firebase.service";
-import { Brim } from "../../State/Control";
+import { connect } from "react-redux";
+import { generateId } from "../../Global/Globals";
+import { storage, addFileToDb } from "../../Services/firebase.service";
+import { DispatchCommands } from "../../State/GlobalReducer";
+import { FileState } from "../File/File";
 
-export default function UploadPanel({ children, pins, setpins }) {
-	const [control, setcontrol] = useContext(Brim);
-
+function UploadPanel({
+	userId,
+	deviceId,
+	collectionId,
+	children,
+	addFilesToStage,
+	settings,
+}) {
 	function getFileSize(size) {
 		if (size === 0) return "0 Bytes";
 
@@ -38,14 +46,10 @@ export default function UploadPanel({ children, pins, setpins }) {
 		return type?.toString()?.split("/")[0];
 	}
 
-	function uploadFile(file, filetype, name) {
+	function uploadFile(file, filetype, name, x, y) {
 		const storageRef = storage
 			.ref()
-			.child(
-				`${control.user.id}/${control.currentDevice}/${
-					filetype ?? "misc"
-				}/${name}`
-			)
+			.child(`${userId}/${deviceId}/${filetype ?? "misc"}/${name}`)
 			.put(file);
 
 		// .on("state_changed", (){});
@@ -68,12 +72,14 @@ export default function UploadPanel({ children, pins, setpins }) {
 			},
 			() => {
 				storageRef.snapshot.ref.getDownloadURL().then((url) => {
-					addFileToStash(
-						control.user.collectionId,
-						control.currentDevice,
+					addFileToDb(
+						collectionId,
+						deviceId,
 						file.name,
 						getRefinedType(file.type),
-						url
+						url,
+						x,
+						y
 					);
 				});
 			}
@@ -85,9 +91,9 @@ export default function UploadPanel({ children, pins, setpins }) {
 	}
 
 	function onDrop(file, e) {
-		setpins({
-			...pins,
+		addFilesToStage({
 			[`${file[0].name}`]: {
+				id: generateId(),
 				x: e.clientX,
 				y: e.clientY,
 				name: file[0].name,
@@ -96,10 +102,22 @@ export default function UploadPanel({ children, pins, setpins }) {
 				type: file[0].type ? getRefinedType(file[0].type) : "image",
 				file: file[0],
 				progress: 0,
+				fileState: FileState.DROPPED,
 			},
 		});
 
-		// uploadFile(file[0], getRefinedType(file[0].type), file[0].name);
+		setTimeout(
+			() => {
+				// uploadFile(
+				// 	file[0],
+				// 	getRefinedType(file[0].type),
+				// 	file[0].name,
+				// 	e.clientX,
+				// 	e.clientY
+				// );
+			},
+			settings.instantStash ? 0 : settings.stashDelay * 1000
+		);
 	}
 
 	return (
@@ -108,3 +126,25 @@ export default function UploadPanel({ children, pins, setpins }) {
 		</FileDrop>
 	);
 }
+
+function mapStateToProps(state) {
+	return {
+		userId: state.userId,
+		devieId: state.deviceId,
+		collectionId: state.collectionId,
+		panelOnline: state.panelOnline,
+		settings: state.settings,
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		addFilesToStage: (files) =>
+			dispatch({
+				type: DispatchCommands.ADD_FILES_TO_STAGE,
+				payload: files,
+			}),
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UploadPanel);

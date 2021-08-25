@@ -2,6 +2,7 @@
 	--theme: rgb(39, 39, 39);
 	--glass: rgba(255, 255, 255, 0.15);
 	--dark-glass: rgba(39, 39, 39, 0.848);
+	--orange-glass: tomato;
 	--accent: #1976d2;
 	--file-size: 100px;
 	--file-responsive-size: 21vw;
@@ -9,7 +10,8 @@
 	--home-bg-index: -10;
 	--file-index: 10;
 	--file-loader-index: 10;
-	--window-menu-index: 100;
+	--window-menu-index: 10;
+	--window-loader-index: 10;
 	--viewer-index: 400;
 	--file-options-menu-index: 400;
 	--home-menu-index: 400;
@@ -38,7 +40,15 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-body div button {
+body,
+div,
+button,
+input,
+section,
+textarea,
+article,
+text,
+img {
 	-webkit-touch-callout: none !important;
 	-webkit-user-select: none !important;
 	-khtml-user-select: none !important;
@@ -57,7 +67,8 @@ code {
 		monospace;
 }
 
-div {
+div,
+input {
 	box-sizing: border-box;
 }
 
@@ -71,6 +82,16 @@ button {
 
 button:active {
 	transform: scale(0.9);
+}
+
+input {
+	border: none;
+	height: 50px;
+	outline: none;
+	font-size: 1.3em;
+	padding: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 ::-webkit-scrollbar {

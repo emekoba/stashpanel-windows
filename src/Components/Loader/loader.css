@@ -1,0 +1,39 @@
+.loader {
+	outline: none;
+	width: 50px;
+	background: var(--dark-glass);
+	top: 0px;
+	right: 0px;
+	position: absolute;
+	z-index: var(--window-loader-index);
+}
+
+.loader-icon-scaffold {
+	display: grid;
+	place-items: center;
+	width: 100%;
+}
+
+@keyframes open-loader-animation {
+	from {
+		height: 0px;
+		background: transparent;
+	}
+
+	to {
+		height: 30px;
+		background: var(--dark-glass);
+	}
+}
+
+@keyframes close-loader-animation {
+	from {
+		height: 30px;
+		background: var(--dark-glass);
+	}
+
+	to {
+		height: 0px;
+		background: transparent;
+	}
+}

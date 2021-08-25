@@ -21,27 +21,21 @@ import {
 	bg13,
 	bg14,
 	bg15,
-	pr1,
-	pr2,
-	pr3,
+	bg16,
+	bg17,
+	bg18,
+	bg19,
+	bg20,
 } from "../../Resources/Resources";
-import Archive from "../Archive/Archive";
+import Stash from "../Stash/Stash";
 import Viewer from "../Viewer/Viewer";
 import FileOptionsMenu from "../../Components/FileOptionsMenu/FileOptionsMenu";
 import TextEditor from "../TextEditor/TextEditor";
+import Settings from "../Settings/Settings";
+import { connect } from "react-redux";
+import { DispatchCommands } from "../../State/GlobalReducer";
 
-export default function Home({ archiveOpen }) {
-	const [filepins, setfilepins] = useState({
-		//"prism": {
-		// 	x: 220,
-		// 	y: 220,
-		// 	name: "russell",
-		// 	date: "02-20-2021",
-		// 	file: pr1,
-		// 	type: "image",
-		// },
-	});
-
+function Home({ homeDb, addFilesToStage, removeFileFromStage }) {
 	const [tilting, settilting] = useState(false);
 
 	const [filemenu, setfilemenu] = useState({
@@ -64,6 +58,10 @@ export default function Home({ archiveOpen }) {
 	});
 
 	const [texteditor, settexteditor] = useState({ isOpen: false });
+
+	const [showsettings, setshowsettings] = useState(false);
+
+	const [firstReorder, setFirstReorder] = useState(true);
 
 	const slideControl = createRef();
 
@@ -97,6 +95,18 @@ export default function Home({ archiveOpen }) {
 		});
 	}, []);
 
+	useEffect(() => {
+		// if (firstReorder) {
+		// 	readjustFilePosition(filepins);
+		// }
+		// window.addEventListener("resize", () => readjustFilePosition(homeDb));
+		// return () => {
+		// 	window.removeEventListener("resize", () => readjustFilePosition(homeDb));
+		// };
+	}, []);
+
+	// window.addEventListener("resize", () => readjustFilePosition(homeDb));
+
 	function openHomeMenu(x, y) {
 		if (!texteditor.isOpen) {
 			sethomemenu({ ...homemenu, isOpen: true, x: x, y: y });
@@ -116,8 +126,7 @@ export default function Home({ archiveOpen }) {
 	}
 
 	function removeFile(name) {
-		delete filepins[name];
-		setfilepins({ ...filepins });
+		removeFileFromStage(name);
 	}
 
 	function openFile(file, type) {
@@ -135,7 +144,7 @@ export default function Home({ archiveOpen }) {
 	}
 
 	function stashAllFiles() {
-		setfilepins({});
+		//? take all files and store them in the stash obj and clear stage obj
 	}
 
 	function onFileMenuItemPressed(action) {
@@ -176,14 +185,62 @@ export default function Home({ archiveOpen }) {
 		closeHomeMenu();
 	}
 
+	function readjustFilePosition(all_pins) {
+		const winX = window.innerWidth;
+		const winY = window.innerHeight;
+
+		const fileSize = 100;
+
+		const diffX = 50;
+		const diffY = 90;
+
+		const adjustmentX = 95;
+		const adjustmentY = 95;
+
+		Object.keys(all_pins).map((key, _) => {
+			const fileCoordinateX = all_pins[key]["x"];
+			const fileCoordinateY = all_pins[key]["y"];
+
+			const fileBodyX = fileCoordinateX - diffX + fileSize;
+			const fileBodyY = fileCoordinateY - diffY + fileSize;
+
+			let finalFileBodyX;
+			let finalFileBodyY;
+
+			if (winX > fileBodyX) {
+				console.log("%c files X axis is visible", "color:lightgreen");
+			} else {
+				console.log("%c files X axis is obscured", "color:orange");
+
+				finalFileBodyX = fileCoordinateX + adjustmentX - fileSize;
+
+				all_pins[key]["x"] = finalFileBodyX;
+
+				addFilesToStage(all_pins);
+			}
+
+			if (winY > fileBodyY) {
+				console.log("%c files Y axis is visible", "color:lightgreen");
+			} else {
+				console.log("%c files Y axis is obscured", "color:orange");
+
+				finalFileBodyY = fileCoordinateY + adjustmentY - fileSize;
+
+				all_pins[key]["y"] = finalFileBodyY;
+
+				addFilesToStage(all_pins);
+			}
+		});
+
+		// if (firstReorder) setFirstReorder(false);
+		// window.removeEventListener("resize", () => readjustFilePosition(homeDb));
+	}
+
 	return (
 		<div className="home-superior">
-			{/* <img
-				src={filepins[0]?.file}
-				style={{ marginLeft: 100, height: 200, width: 200 }}
-			/> */}
+			{showsettings && <Settings />}
 
-			<UploadPanel pins={filepins} setpins={setfilepins}>
+			<UploadPanel>
 				<Tilt
 					tiltEnable={tilting}
 					perspective={10000}
@@ -196,20 +253,24 @@ export default function Home({ archiveOpen }) {
 
 						{/* <img style={{ height: "100vh" }} src={bg8} className="home-bg" /> */}
 
-						{Object.keys(filepins).map((key, _) => (
+						{Object.keys(homeDb).map((key, _) => (
 							<File
-								key={filepins[key].name}
-								name={filepins[key].name}
-								date={filepins[key].date}
-								type={filepins[key].type}
-								posX={filepins[key].x}
-								posY={filepins[key].y}
-								file={filepins[key].file}
-								path={filepins[key].path}
+								id={homeDb[key]?.id}
+								key={homeDb[key]?.name}
+								name={homeDb[key]?.name}
+								date={homeDb[key]?.date}
+								type={homeDb[key]?.type}
+								posX={homeDb[key]?.x}
+								posY={homeDb[key]?.y}
+								file={homeDb[key]?.file}
+								link={homeDb[key]?.link}
+								path={homeDb[key]?.path}
 								removeFile={removeFile}
-								progress={filepins[key].progress}
+								progress={homeDb[key]?.progress}
 								openFile={openFile}
 								openFileMenu={openFileMenu}
+								isExternal={homeDb[key]?.isExternal}
+								fileState={homeDb[key]?.fileState}
 							/>
 						))}
 
@@ -220,6 +281,7 @@ export default function Home({ archiveOpen }) {
 							>
 								{homemenu.buttons.map((e) => (
 									<button
+										key={e}
 										className="home-menu-item"
 										onClick={() => onHomeMenuPressed(e)}
 									>
@@ -249,7 +311,7 @@ export default function Home({ archiveOpen }) {
 				</Tilt>
 			</UploadPanel>
 
-			<Archive />
+			<Stash />
 		</div>
 	);
 }
@@ -267,10 +329,15 @@ function Slides({ slideControl }) {
 		8: bg9,
 		9: bg10,
 		// 10: bg11,
-		// 11: bg12,
+		11: bg12,
 		12: bg13,
 		// 13: bg14,
 		// 14: bg15,
+		15: bg16,
+		// 16: bg17,
+		// 17: bg18,
+		18: bg19,
+		19: bg20,
 	};
 
 	return (
@@ -291,3 +358,29 @@ function Slides({ slideControl }) {
 		</Fade>
 	);
 }
+
+function mapStateToProps(state) {
+	return {
+		homeDb: state.stage,
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		addFilesToStage: (files) => {
+			dispatch({
+				type: DispatchCommands.ADD_FILES_TO_STAGE,
+				payload: files,
+			});
+		},
+
+		removeFileFromStage: (file) => {
+			dispatch({
+				type: DispatchCommands.REMOVE_FILE_FROM_STASH,
+				payload: file,
+			});
+		},
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

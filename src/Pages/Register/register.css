@@ -1,0 +1,66 @@
+.register {
+	height: 100vh;
+	background-color: var(--glass);
+	/* background-color: white; */
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+
+.left-side {
+	background-color: var(--dark-glass);
+}
+
+.right-side {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 10px;
+	overflow-y: scroll;
+}
+
+.register-btn {
+	height: 45px;
+	width: 80%;
+	margin: 20px;
+	background-color: var(--dark-glass);
+	/* border-radius: 5px; */
+	color: white;
+	box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+		rgba(0, 0, 0, 0.22) 0px 15px 12px;
+	margin-top: 40px;
+}
+
+.register-input-placeholder-container {
+	width: 80%;
+	position: relative;
+}
+
+.register-placeholder {
+	/* color: white; */
+	font-weight: bold;
+	color: var(--dark-glass);
+	margin: 6px;
+	margin-left: 0px;
+}
+
+.register-input {
+	width: 100%;
+	margin-bottom: 20px;
+	background-color: var(--glass);
+	/* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; */
+	/* box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
+		rgba(0, 0, 0, 0.22) 0px 15px 12px; */
+	border: 2px solid var(--dark-glass);
+}
+
+.toggle-visible {
+	height: 25px;
+	width: 30px;
+	background: var(--dark-glass);
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	display: grid;
+	place-items: center;
+	cursor: pointer;
+}

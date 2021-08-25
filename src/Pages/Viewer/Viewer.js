@@ -1,31 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./viewer.css";
 import ReactPlayer from "react-player/lazy";
 
 export default function Viewer({ file, type, closeViewer }) {
-	const [preview, setpreview] = useState("");
-
-	useEffect(() => {
-		if (file) {
-			const reader = new FileReader();
-
-			reader.readAsDataURL(file);
-
-			reader.onload = (e) => setpreview(e.target.result);
-		}
-	}, []);
-
 	function resolveFile() {
 		switch (type) {
 			case "image":
 				return (
-					<img src={preview} alt={file?.toString()} className="viewer-image" />
+					<img src={file} alt={file?.toString()} className="viewer-image" />
 				);
 
 			case "video":
 				return (
 					<ReactPlayer
-						url={preview}
+						url={file}
 						controls
 						width={"100%"}
 						height={"100%"}

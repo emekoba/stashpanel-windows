@@ -4,14 +4,19 @@ export const Brim = createContext();
 
 export const Control = (props) => {
 	const [control, setcontrol] = useState({
-		currentDevice: "Hp Pavilion",
+		deviceId: "fukvUJHvPZ3KfGRNlvUd",
+
+		collectionId: "eQFU59ZiUm2bNViUU29Q",
+
+		archive: {},
+
+		stage: {},
 
 		user: {
-			id: "nM3l2KmFy8A8ZwVvxD2k",
+			id: "kMSGxfO5H5SmwQoIGKC17b7pvWS2",
 			firstName: "",
 			lastName: "",
 			email: "",
-			collectionId: "HwVasR1GVohvQBAm4x86",
 		},
 
 		settings: {

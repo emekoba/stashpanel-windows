@@ -1,5 +1,5 @@
 .menubar-container {
-	width: 100vw;
+	width: 100px;
 	background: red;
 	position: absolute;
 	z-index: var(--menubar-index);
@@ -21,13 +21,15 @@
 	height: 40px;
 	display: flex;
 	align-items: center;
-	border-radius: 4vw;
+	border-radius: 35px;
 	position: absolute;
 	background: var(--dark-glass);
 	justify-content: space-between;
 	padding-right: 15px;
 	padding-left: 50px;
 	cursor: pointer;
+
+	display: none;
 }
 
 .menubar-item {
@@ -39,24 +41,24 @@
 
 @keyframes slide-from-left {
 	from {
-		width: 0vw;
-		background: transparent;
+		width: 0px;
+		display: none;
 	}
 
 	to {
-		width: 200px;
-		background: var(--dark-glass);
+		width: 180px;
+		display: flex;
 	}
 }
 
 @keyframes slide-from-right {
 	from {
-		width: 200px;
-		background: var(--dark-glass);
+		width: 180px;
+		display: flex;
 	}
 
 	to {
-		width: 0vw;
-		background: transparent;
+		width: 0px;
+		display: none;
 	}
 }

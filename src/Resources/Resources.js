@@ -13,6 +13,11 @@ import bg12 from "./Background/background12.jpg";
 import bg13 from "./Background/background13.jpg";
 import bg14 from "./Background/background14.jpg";
 import bg15 from "./Background/background15.jpg";
+import bg16 from "./Background/background16.jpg";
+import bg17 from "./Background/background17.jpg";
+import bg18 from "./Background/background18.jpg";
+import bg19 from "./Background/background19.jpg";
+import bg20 from "./Background/background20.jpg";
 
 import pr1 from "./Profile/Profile1.jpg";
 import pr2 from "./Profile/Profile2.jpg";
@@ -42,6 +47,7 @@ import imageType from "./Icons/image-type2.png";
 import codeType from "./Icons/code-type.png";
 import editImage from "./Icons/edit-image.png";
 import videoType from "./Icons/video-type.png";
+import CloudOffIcon from "@material-ui/icons/CloudOff";
 
 export {
 	bg1,
@@ -59,6 +65,11 @@ export {
 	bg13,
 	bg14,
 	bg15,
+	bg16,
+	bg17,
+	bg18,
+	bg19,
+	bg20,
 	pr1,
 	pr2,
 	pr3,
@@ -86,4 +97,5 @@ export {
 	codeType,
 	editImage,
 	videoType,
+	CloudOffIcon,
 };

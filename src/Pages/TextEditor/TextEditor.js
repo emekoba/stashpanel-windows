@@ -25,6 +25,8 @@ export default function TextEditor({ isOpen }) {
 			() => {
 				Array.from(editor.childNodes).map((each) => {
 					each.style.display = `${isOpen ? "flex" : "none"}`;
+
+					return null;
 				});
 			},
 			isOpen ? 1000 : 0
@@ -37,7 +39,7 @@ export default function TextEditor({ isOpen }) {
 
 	useEffect(() => {
 		editorController.current.focus();
-	}, []);
+	}, [editorController]);
 
 	function onChange(editorState) {
 		setEditorState(editorState);
@@ -73,12 +75,7 @@ export default function TextEditor({ isOpen }) {
 					onToggle={toggleInlineStyle}
 				/>
 
-				<hr
-					style={{
-						width: "100%",
-						borderColor: "var(--dark-glass)",
-					}}
-				/>
+				<hr style={{ width: "100%", borderColor: "var(--dark-glass)" }} />
 
 				<div style={{ marginTop: 10 }}>
 					<Editor
