@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import "./menubar.css";
-import { pr3, devices2, settings2 } from "../../Resources/Resources";
+import { devices2, settings2, gridview } from "../../Resources/Resources";
+import { connect } from "react-redux";
 
-export default function MenuBar({ onClick }) {
+function MenuBar({ userDp, onClick }) {
 	const [menuopen, setmenuopen] = useState(false);
 
 	useEffect(() => {
@@ -53,23 +54,30 @@ export default function MenuBar({ onClick }) {
 
 				<img alt="" src={devices2} className="menubar-item bounce-on-click" />
 
-				<img alt="" src={devices2} className="menubar-item bounce-on-click" />
+				<img alt="" src={gridview} className="menubar-item bounce-on-click" />
 
 				<img alt="" src={settings2} className="menubar-item bounce-on-click" />
 			</div>
 
 			<img
-				alt=""
+				alt={userDp?.toString()}
 				// onClick={avatarClicked}
-				alt=""
 				className="avatar glass"
-				src={pr3}
+				src={userDp}
 				onMouseEnter={onMenubarHover}
 				onMouseLeave={onMenubarLeave}
 			/>
 		</div>
 	);
 }
+
+function mapStateToProps(state) {
+	return {
+		userDp: state.userDp,
+	};
+}
+
+export default connect(mapStateToProps)(MenuBar);
 
 {
 	/* <img alt="" src={drag2} className="menubar-item drag-window grabbable" />; */

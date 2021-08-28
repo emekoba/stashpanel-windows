@@ -9,9 +9,10 @@ export default function Onboarding() {
 		route: "login",
 	});
 
-	useEffect(() => {
-		setTimeout(() => setonboarding({ ...onboarding, route: "login" }), 0);
-	}, [null]);
+	useEffect(
+		() => setTimeout(() => setonboarding({ ...onboarding, route: "login" }), 0),
+		[null]
+	);
 
 	function getRoute() {
 		switch (onboarding.route) {
@@ -23,7 +24,7 @@ export default function Onboarding() {
 				return <Register />;
 				break;
 
-			case "spalsh":
+			case "splash":
 				break;
 
 			case "add-collection":

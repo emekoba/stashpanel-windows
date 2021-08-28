@@ -119,7 +119,7 @@
 	}
 }
 
-@keyframes file-in-animation {
+@keyframes file-in-animation-image {
 	from {
 		height: 0px;
 		width: 0px;
@@ -131,10 +131,34 @@
 	}
 }
 
-@keyframes file-out-animation {
+@keyframes file-out-animation-image {
 	from {
 		height: 100px;
 		width: 100px;
+	}
+
+	to {
+		height: 0px;
+		width: 0px;
+	}
+}
+
+@keyframes file-in-animation-video {
+	from {
+		height: 0px;
+		width: 0px;
+	}
+
+	to {
+		height: 100px;
+		width: 180px;
+	}
+}
+
+@keyframes file-out-animation-video {
+	from {
+		height: 100px;
+		width: 180px;
 	}
 
 	to {

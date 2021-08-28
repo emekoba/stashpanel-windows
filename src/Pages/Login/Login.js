@@ -19,8 +19,8 @@ export default function Login({ goToRegister }) {
 		setform({ ...form, passwordVisible: !form.passwordVisible });
 	}
 
-	async function handleLogin() {
-		const resp = await login(form.email, form.password);
+	function handleLogin() {
+		login(form.email, form.password);
 	}
 
 	return (

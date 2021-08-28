@@ -1,21 +1,12 @@
 import { LoaderState } from "../Components/Loader/Loader";
-import { isObject } from "../Global/Globals";
+import { isObject, DispatchCommands, HomeViewType } from "../Global/Globals";
 import { bg3 } from "../Resources/Resources";
 
-export const DispatchCommands = {
-	START_LOADER: "START_LOADER",
-	STOP_LOADER: "STOP_LOADER",
-	ADD_FILES_TO_STAGE: "ADD_FILES_TO_STAGE",
-	ADD_FILES_TO_STASH: "ADD_FILES_TO_STASH",
-	UPDATE_USER_ID: "UPDATE_USER_ID",
-	SET_LOADER_TO_OFFLINE: "SET_LOADER_TO_OFFLINE",
-	CLEAR_STASH_AND_STAGE: "CLEAR_STASH_AND_STAGE",
-	TOGGLE_NETWORK_STATUS: "TOGGLE_NETWORK_STATUS",
-	REMOVE_FILE_FROM_STASH: "REMOVE_FILE_FROM_STASH",
-	UPDATE_SETTINGS: "UPDATE_SETTINGS",
-};
-
 export const stashPanelGlobalState = {
+	userDp: "",
+
+	collectionBanner: "",
+
 	panelOnline: false,
 
 	userId: "kMSGxfO5H5SmwQoIGKC17b7pvWS2",
@@ -23,6 +14,8 @@ export const stashPanelGlobalState = {
 	deviceId: "fukvUJHvPZ3KfGRNlvUd",
 
 	collectionId: "eQFU59ZiUm2bNViUU29Q",
+
+	homeView: HomeViewType.GRID,
 
 	stash: {},
 
@@ -112,7 +105,6 @@ function globalReducer(state = stashPanelGlobalState, action) {
 		case DispatchCommands.REMOVE_FILE_FROM_STASH:
 			delete state["stage"][action.payload];
 			return state;
-
 			break;
 
 		case DispatchCommands.TOGGLE_NETWORK_STATUS:
@@ -121,6 +113,14 @@ function globalReducer(state = stashPanelGlobalState, action) {
 
 		case DispatchCommands.UPDATE_SETTINGS:
 			return { ...state, settings: { ...state.settings, ...action.payload } };
+			break;
+
+		case DispatchCommands.ADD_USER_DP:
+			return { ...state, userDp: action.payload };
+			break;
+
+		case DispatchCommands.ADD_COLLECTION_BANNER:
+			return { ...state, collectionBanner: action.payload };
 			break;
 
 		default:

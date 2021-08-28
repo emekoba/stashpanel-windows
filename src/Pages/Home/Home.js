@@ -26,6 +26,7 @@ import {
 	bg18,
 	bg19,
 	bg20,
+	bg21,
 } from "../../Resources/Resources";
 import Stash from "../Stash/Stash";
 import Viewer from "../Viewer/Viewer";
@@ -33,9 +34,9 @@ import FileOptionsMenu from "../../Components/FileOptionsMenu/FileOptionsMenu";
 import TextEditor from "../TextEditor/TextEditor";
 import Settings from "../Settings/Settings";
 import { connect } from "react-redux";
-import { DispatchCommands } from "../../State/GlobalReducer";
+import { DispatchCommands, HomeViewType } from "../../Global/Globals";
 
-function Home({ homeDb, addFilesToStage, removeFileFromStage }) {
+function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 	const [tilting, settilting] = useState(false);
 
 	const [filemenu, setfilemenu] = useState({
@@ -236,6 +237,32 @@ function Home({ homeDb, addFilesToStage, removeFileFromStage }) {
 		// window.removeEventListener("resize", () => readjustFilePosition(homeDb));
 	}
 
+	function getFiles() {
+		let _all_files = Object.keys(homeDb).map((key, _) => (
+			<File
+				id={homeDb[key]?.id}
+				key={homeDb[key]?.name}
+				name={homeDb[key]?.name}
+				date={homeDb[key]?.date}
+				type={homeDb[key]?.type}
+				posX={homeDb[key]?.x}
+				posY={homeDb[key]?.y}
+				file={homeDb[key]?.file}
+				link={homeDb[key]?.link}
+				path={homeDb[key]?.path}
+				removeFile={removeFile}
+				progress={homeDb[key]?.progress}
+				openFile={openFile}
+				openFileMenu={openFileMenu}
+				isExternal={homeDb[key]?.isExternal}
+				fileState={homeDb[key]?.fileState}
+				ownerDp={homeDb[key]?.ownerDp}
+			/>
+		));
+
+		return _all_files;
+	}
+
 	return (
 		<div className="home-superior">
 			{showsettings && <Settings />}
@@ -253,26 +280,11 @@ function Home({ homeDb, addFilesToStage, removeFileFromStage }) {
 
 						{/* <img style={{ height: "100vh" }} src={bg8} className="home-bg" /> */}
 
-						{Object.keys(homeDb).map((key, _) => (
-							<File
-								id={homeDb[key]?.id}
-								key={homeDb[key]?.name}
-								name={homeDb[key]?.name}
-								date={homeDb[key]?.date}
-								type={homeDb[key]?.type}
-								posX={homeDb[key]?.x}
-								posY={homeDb[key]?.y}
-								file={homeDb[key]?.file}
-								link={homeDb[key]?.link}
-								path={homeDb[key]?.path}
-								removeFile={removeFile}
-								progress={homeDb[key]?.progress}
-								openFile={openFile}
-								openFileMenu={openFileMenu}
-								isExternal={homeDb[key]?.isExternal}
-								fileState={homeDb[key]?.fileState}
-							/>
-						))}
+						{homeViewDb === HomeViewType.ROAM ? (
+							<>{getFiles()}</>
+						) : (
+							<div className="home-grid">{getFiles()}</div>
+						)}
 
 						{homemenu.isOpen && (
 							<div
@@ -338,6 +350,7 @@ function Slides({ slideControl }) {
 		// 17: bg18,
 		18: bg19,
 		19: bg20,
+		20: bg21,
 	};
 
 	return (
@@ -362,6 +375,7 @@ function Slides({ slideControl }) {
 function mapStateToProps(state) {
 	return {
 		homeDb: state.stage,
+		homeViewDb: HomeViewType.GRID,
 	};
 }
 

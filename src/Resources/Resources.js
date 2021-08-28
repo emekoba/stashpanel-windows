@@ -1,7 +1,7 @@
 import bg1 from "./Background/background1.jpg";
 import bg2 from "./Background/background3.jpg";
 import bg3 from "./Background/background3.jpg";
-import bg4 from "./Background/background4.png";
+import bg4 from "./Background/background4.jpg";
 import bg5 from "./Background/background5.jpg";
 import bg6 from "./Background/background6.jpg";
 import bg7 from "./Background/background7.jpg";
@@ -18,6 +18,7 @@ import bg17 from "./Background/background17.jpg";
 import bg18 from "./Background/background18.jpg";
 import bg19 from "./Background/background19.jpg";
 import bg20 from "./Background/background20.jpg";
+import bg21 from "./Background/background21.jpg";
 
 import pr1 from "./Profile/Profile1.jpg";
 import pr2 from "./Profile/Profile2.jpg";
@@ -47,6 +48,7 @@ import imageType from "./Icons/image-type2.png";
 import codeType from "./Icons/code-type.png";
 import editImage from "./Icons/edit-image.png";
 import videoType from "./Icons/video-type.png";
+import gridview from "./Icons/gridview.png";
 import CloudOffIcon from "@material-ui/icons/CloudOff";
 
 export {
@@ -70,6 +72,7 @@ export {
 	bg18,
 	bg19,
 	bg20,
+	bg21,
 	pr1,
 	pr2,
 	pr3,
@@ -93,6 +96,7 @@ export {
 	DeleteIcon,
 	stash,
 	delete_icon,
+	gridview,
 	imageType,
 	codeType,
 	editImage,

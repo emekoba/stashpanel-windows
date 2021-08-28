@@ -14,16 +14,34 @@ app.initializeApp({
 });
 
 export function updateUsersCollection(firstname, lastname, email, id) {
-	firebase.firestore().collection("users").doc(id).set({
-		firstname,
-		lastname,
-		email,
-		dp: "",
-		country: "nigeria",
-		plan: "free",
-		createdAt: new Date(),
-		updatedAt: new Date(),
-	});
+	const avatarTypes = [
+		"male",
+		"female",
+		"human",
+		"identicon",
+		"initials",
+		"bottts",
+		"avataaars",
+		"jdenticon",
+		"micah",
+	];
+
+	firebase
+		.firestore()
+		.collection("users")
+		.doc(id)
+		.set({
+			firstname,
+			lastname,
+			email,
+			dp: `https://avatars.dicebear.com/api/${
+				avatarTypes[Math.floor(Math.random() * avatarTypes.length)]
+			}/${firstname + lastname}.svg`,
+			country: "nigeria",
+			plan: "free",
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		});
 }
 
 export function updateDevicesCollection() {}
@@ -80,19 +98,28 @@ export function addFileToDb(
 		.catch((err) => console.log(err));
 }
 
+export function getUser(id, options) {
+	console.log("%c get user", "color:purple");
+
+	return database
+		.collection("users")
+		.doc(id)
+		.get()
+		.then((user) => user.data());
+}
+
 export function login(email, password) {
-	firebase
-		.auth()
-		.signInWithEmailAndPassword(email, password)
-		.then((userCredential) => {
-			// Signed in
-			var user = userCredential.user;
-			// ...
-		})
-		.catch((error) => {
-			var errorCode = error.code;
-			var errorMessage = error.message;
-		});
+	return (
+		firebase
+			.auth()
+			.signInWithEmailAndPassword(email, password)
+			// .then((userCredentials) => console.log(userCredentials.user.uid))
+			.catch((error) => {
+				let errorCode = error.code;
+				let errorMessage = error.message;
+				console.log(errorMessage);
+			})
+	);
 }
 
 export function logout() {

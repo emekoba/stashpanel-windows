@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./viewer.css";
 import ReactPlayer from "react-player/lazy";
 
 export default function Viewer({ file, type, closeViewer }) {
+	useEffect(() => {
+		document.onkeydown = function (evt) {
+			evt = evt || window.event;
+			if (evt.keyCode == 27) closeViewer();
+		};
+	}, []);
+
 	function resolveFile() {
 		switch (type) {
 			case "image":
@@ -34,6 +41,7 @@ export default function Viewer({ file, type, closeViewer }) {
 	}
 	return (
 		<div
+			id="viewer"
 			className="viewer"
 			onClick={(e) => {
 				e.stopPropagation();

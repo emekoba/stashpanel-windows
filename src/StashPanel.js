@@ -2,14 +2,12 @@ import "./stashpanel.css";
 import Home from "./Pages/Home/Home";
 import MenuBar from "./Components/MenuBar/MenuBar";
 import { CloseIcon, MenuIcon, MinimizeIcon } from "./Resources/Resources";
-import firebase, { database } from "./Services/firebase.service";
+import firebase, { database, getUser } from "./Services/firebase.service";
 import { useEffect, useState } from "react";
 import Onboarding from "./Pages/Onboarding/Onboarding";
 import Loader, { LoaderState } from "./Components/Loader/Loader";
-import { DispatchCommands } from "./State/GlobalReducer";
-import { FileState } from "./Components/File/File";
+import { DispatchCommands, FileState } from "./Global/Globals";
 import { connect } from "react-redux";
-import { isObject } from "./Global/Globals";
 
 function StashPanel({
 	userId,
@@ -23,56 +21,60 @@ function StashPanel({
 	panelOnline,
 	toggleNetworkStatus,
 	updateSettings,
+	addUserDp,
 }) {
-	const [isLoggedIn, setIsLoggedIn] = useState(true);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	//! use whatsapp alert for stashpanel alerts when new file is staged.........
 
 	useEffect(() => {
-		if (!panelOnline) {
-			console.log("%c panel online", "color:limegreen");
+		if (isLoggedIn) {
+			if (!panelOnline) {
+				console.log("%c panel online", "color:limegreen");
 
-			startLoader(LoaderState.LOADING);
+				startLoader(LoaderState.LOADING);
 
-			database
-				.collection("panel-collections")
-				.doc(collectionId)
-				.get()
-				.then((doc) => {
-					console.log(
-						"%c panel collection reads (for mine and other devices)",
-						"color:lightblue"
-					);
+				database
+					.collection("panel-collections")
+					.doc(collectionId)
+					.get()
+					.then((doc) => {
+						console.log(
+							"%c panel collection reads (for mine and other devices)",
+							"color:lightblue"
+						);
 
-					const all_other_users = [];
+						const all_other_users = [];
 
-					if (doc.data()) {
-						const _other_users = doc.data().members.filter((e) => e !== userId);
-						_other_users.map((each_user) => all_other_users.push(each_user));
-					}
+						if (doc.data()) {
+							const _other_users = doc
+								.data()
+								.members.filter((e) => e !== userId);
+							_other_users.map((each_user) => all_other_users.push(each_user));
+						}
 
-					fetchOtherUsersDevices(all_other_users);
-				});
+						fetchOtherUsersDevices(all_other_users);
+					});
 
-			fetchMyDevice(userId);
-		} else {
-			console.log("%c panel offline", "color:tomato");
+				fetchMyDevice(userId);
+			} else {
+				console.log("%c panel offline", "color:tomato");
 
-			startLoader(LoaderState.OFFLINE);
+				startLoader(LoaderState.OFFLINE);
+			}
 		}
-	}, [collectionId, panelOnline]);
+	}, [collectionId, panelOnline, isLoggedIn]);
 
 	useEffect(() => {
 		firebase?.auth().onAuthStateChanged((user) => {
 			if (user) {
 				updateUserId(user.uid);
+				getUser(user.uid).then((userInfo) => addUserDp(userInfo["dp"]));
 
 				setIsLoggedIn(true);
 			} else {
 				//? if no longer logged in switch to onboarding
-
 				setIsLoggedIn(false);
-
 				clearStageAndStash();
 			}
 		});
@@ -116,10 +118,14 @@ function StashPanel({
 				device_docs.docs.forEach((doc) => {
 					const _files = doc.data()["files"];
 
-					queryMultipleFiles(_files, {
-						isExternal: false,
-						sortFiles: true,
-					}).then((fetched_files) => {
+					queryMultipleFiles(
+						_files,
+						{},
+						{
+							isExternal: false,
+							sortFiles: true,
+						}
+					).then((fetched_files) => {
 						addFilesToStage(fetched_files["staged"]);
 						addFilesToStash(fetched_files["stashed"]);
 
@@ -131,6 +137,14 @@ function StashPanel({
 
 	function fetchOtherUsersDevices(allUsersArray) {
 		let _all_device_files = [];
+
+		let userInfoRedundancyCheck = {
+			// fukvUJHv: {
+			// 	device: "",
+			// 	files: [],
+			// 	dp: "",
+			// },
+		};
 
 		database
 			.collection("devices")
@@ -146,20 +160,45 @@ function StashPanel({
 						let _each_device_in_collection = doc.data();
 
 						const _files = _each_device_in_collection["files"];
+						const _device_owner = _each_device_in_collection["owner"];
+
+						let ownerExists = false;
+
+						Object.keys(userInfoRedundancyCheck).map((key, val) => {
+							if (key === _device_owner) ownerExists = true;
+						});
+
+						if (!ownerExists) {
+							userInfoRedundancyCheck[_device_owner] = {
+								device: "doc.id",
+								files: _files,
+								dp: "",
+							};
+
+							getUser(_device_owner).then((user) => {
+								userInfoRedundancyCheck[_device_owner] = {
+									device: doc.id,
+									files: _files,
+									dp: user["dp"],
+								};
+							});
+						}
 
 						_all_device_files.push(_files);
+
+						_all_device_files = [].concat.apply([], _all_device_files);
 					});
 
-					_all_device_files = [].concat.apply([], _all_device_files);
+					console.log(userInfoRedundancyCheck);
 
-					queryMultipleFiles(_all_device_files, { isExternal: true }).then(
-						(staged_files) => addFilesToStage(staged_files)
-					);
+					queryMultipleFiles(_all_device_files, userInfoRedundancyCheck, {
+						isExternal: true,
+					}).then((staged_files) => addFilesToStage(staged_files));
 				}
 			);
 	}
 
-	function queryMultipleFiles(fileArray, options) {
+	function queryMultipleFiles(fileArray, userInfoRedundancyCheck, options) {
 		let pure_array = [];
 
 		let file_deck = {};
@@ -167,6 +206,18 @@ function StashPanel({
 		let sorted_file_deck = {};
 
 		fileArray.map((e) => pure_array.push(e["fileId"]));
+
+		function resolveDp(fileId) {
+			let dp;
+
+			Object.keys(userInfoRedundancyCheck).map((key, val) =>
+				userInfoRedundancyCheck[key]["files"].map((e) => {
+					if (e.fileId === fileId) dp = userInfoRedundancyCheck[key]["dp"];
+				})
+			);
+
+			return dp;
+		}
 
 		return database
 			.collection("files")
@@ -182,7 +233,7 @@ function StashPanel({
 				file_snapshot.docs.forEach((eachFile) => {
 					const _file_data = eachFile.data();
 
-					if (options.sortFiles) {
+					if (options?.sortFiles) {
 						Object.keys(fileArray).map((key) => {
 							if (fileArray[key]["fileId"] === eachFile.id) {
 								if (fileArray[key]["status"] === "staged") {
@@ -199,6 +250,7 @@ function StashPanel({
 											progress: 0,
 											isExternal: options?.isExternal,
 											fileState: FileState.STAGED,
+											ownerDp: options?.isExternal && resolveDp(eachFile.id),
 										},
 									};
 								}
@@ -234,11 +286,12 @@ function StashPanel({
 							progress: 0,
 							isExternal: options?.isExternal,
 							fileState: FileState.STAGED,
+							ownerDp: options?.isExternal && resolveDp(eachFile.id),
 						};
 					}
 				});
 
-				return options.sortFiles ? sorted_file_deck : file_deck;
+				return options?.sortFiles ? sorted_file_deck : file_deck;
 			});
 	}
 
@@ -326,6 +379,12 @@ function mapDispatchToProps(dispatch) {
 			dispatch({
 				type: DispatchCommands.UPDATE_SETTINGS,
 				payload: settings,
+			}),
+
+		addUserDp: (dp) =>
+			dispatch({
+				type: DispatchCommands.ADD_USER_DP,
+				payload: dp,
 			}),
 	};
 }

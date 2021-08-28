@@ -12,6 +12,15 @@ export default function FileOptionsMenu({ isOpen, menuItemPressed }) {
 		Stash: {
 			icon: stash,
 		},
+
+		Stage: {
+			//? will stage file when instant stage is on.
+			icon: stash,
+		},
+
+		UnStage: {
+			icon: stash,
+		},
 	};
 
 	useEffect(() => {

@@ -15,10 +15,12 @@
 	cursor: pointer;
 	box-shadow: 0 2px 5px rgba(120, 120, 120, 0.25);
 	object-fit: cover;
+	border: 1px solid var(--dark-glass);
+	background: var(--dark-glass);
 }
 
 .menubar {
-	height: 40px;
+	height: 42px;
 	display: flex;
 	align-items: center;
 	border-radius: 35px;

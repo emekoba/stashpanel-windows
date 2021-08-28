@@ -3,16 +3,11 @@ import "./file.css";
 import { CircularProgress, Tooltip } from "@material-ui/core";
 import { imageType, videoType, codeType } from "../../Resources/Resources";
 import VideoThumbnail from "react-video-thumbnail";
-import { pr6 } from "../../Resources/Resources";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
+import { connect } from "react-redux";
+import { HomeViewType, FileState } from "../../Global/Globals";
 
-export const FileState = {
-	DROPPED: "DROPPED",
-	STAGED: "STAGED",
-	STASHED: "STASHED",
-};
-
-export default function File({
+function File({
 	id,
 	name,
 	posX,
@@ -28,6 +23,8 @@ export default function File({
 	link,
 	isExternal,
 	fileState,
+	ownerDp,
+	homeViewDb,
 }) {
 	const [coordinates, setcoordinates] = useState({
 		posX: posX,
@@ -37,13 +34,11 @@ export default function File({
 		diffY: 90,
 	});
 
-	const [boxsizes] = useState({
-		video: { height: 100, width: 180 },
-		photo: { height: 100, width: 100 },
-		image: { height: 100, width: 100 },
+	const [boxtypes] = useState({
+		video: { height: 100, width: 180, anim: "-video" },
+		photo: { height: 100, width: 100, anim: "-image" },
+		image: { height: 100, width: 100, anim: "-image" },
 	});
-
-	const [showdetails, setshowdetails] = useState(false);
 
 	const [showdraghandle, setshowdraghandle] = useState(false);
 
@@ -51,12 +46,21 @@ export default function File({
 
 	const _x = {
 		file: {
-			top: coordinates.posY - coordinates.diffY,
-			left: coordinates.posX - coordinates.diffX,
+			...(homeViewDb === HomeViewType.GRID
+				? {
+						position: "relative",
+						marginRight: 20,
+						marginBottom: 20,
+				  }
+				: {
+						top: coordinates.posY - coordinates.diffY,
+						left: coordinates.posX - coordinates.diffX,
+				  }),
+
 			// top: coordinates.posY * 0.01 + "%",
 			// left: coordinates.posX * 0.112 + "%",
-			width: boxsizes[type]?.width ?? 100,
-			height: boxsizes[type]?.height ?? 100,
+			width: boxtypes[type]?.width ?? 100,
+			height: boxtypes[type]?.height ?? 100,
 			background: isExternal ? "var(--orange-glass)" : "var(--glass)",
 		},
 
@@ -72,7 +76,7 @@ export default function File({
 			position: "absolute",
 			bottom: -3,
 			left: 0,
-			width: boxsizes[type]?.width ?? 100,
+			width: boxtypes[type]?.width ?? 100,
 		},
 
 		date: {
@@ -119,7 +123,7 @@ export default function File({
 			const file_body = document.getElementById(id);
 
 			if (file_body) {
-				file_body.style.animation = `${"file-in-animation 1.0s forwards"}`;
+				file_body.style.animation = `${`file-in-animation${boxtypes[type]["anim"]} 1.0s forwards`}`;
 			}
 		}
 	}, []);
@@ -135,8 +139,8 @@ export default function File({
 				return <img className="file-image" src={preview} alt={type} />;
 
 			case "video":
-				// let thumb_height = 90;
-				// let thumb_width = 85;
+				let thumb_height = 90;
+				let thumb_width = 85;
 
 				return (
 					<div
@@ -149,14 +153,14 @@ export default function File({
 							gridTemplateColumns: "1fr 1fr",
 						}}
 					>
-						{/* <div style={{ width: thumb_width, height: thumb_height }}>
+						<div style={{ width: thumb_width, height: thumb_height }}>
 							<VideoThumbnail
 								videoUrl={preview}
 								style={{ margin: 0 }}
 								height={thumb_height}
 								width={thumb_width}
 							/>
-						</div> */}
+						</div>
 
 						{/* <div style={{ width: thumb_width, height: thumb_height }}></div>
 
@@ -199,11 +203,10 @@ export default function File({
 	}
 
 	function onMouseEnter() {
-		setshowdetails(true);
 		setshowdraghandle(true);
 	}
+
 	function onMouseLeave() {
-		setshowdetails(false);
 		setshowdraghandle(false);
 	}
 
@@ -247,9 +250,9 @@ export default function File({
 
 				{resolveFilePreview()}
 
-				{isExternal && <img className="user-indicator" src={pr6} />}
+				{isExternal && <img className="user-indicator" src={ownerDp} />}
 
-				{showdraghandle && (
+				{showdraghandle && homeViewDb === HomeViewType.ROAM && (
 					<div className="file-drag-handle">
 						<DragIndicatorIcon style={{ color: "white", fontSize: 10 }} />
 					</div>
@@ -258,3 +261,11 @@ export default function File({
 		</Tooltip>
 	);
 }
+
+function mapStateToProps(state) {
+	return {
+		homeViewDb: state.homeView,
+	};
+}
+
+export default connect(mapStateToProps)(File);

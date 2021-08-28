@@ -1,10 +1,8 @@
 import React from "react";
 import { FileDrop } from "react-file-drop";
 import { connect } from "react-redux";
-import { generateId } from "../../Global/Globals";
+import { generateId, DispatchCommands, FileState } from "../../Global/Globals";
 import { storage, addFileToDb } from "../../Services/firebase.service";
-import { DispatchCommands } from "../../State/GlobalReducer";
-import { FileState } from "../File/File";
 
 function UploadPanel({
 	userId,
