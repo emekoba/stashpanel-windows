@@ -52,6 +52,8 @@ import videoType from "./Icons/video-type.png";
 import gridview from "./Icons/gridview.png";
 import CloudOffIcon from "@material-ui/icons/CloudOff";
 
+import notification1 from "./Audio/notification1.mp3";
+
 export {
 	bg1,
 	bg2,
@@ -104,4 +106,5 @@ export {
 	editImage,
 	videoType,
 	CloudOffIcon,
+	notification1,
 };

@@ -6,15 +6,6 @@ import { DispatchCommands } from "../../Global/Globals";
 
 function Viewer({ file, type, closeViewer, hideWindowMenu, showWindowMenu }) {
 	useEffect(() => {
-		document.body.onkeydown = (evt) => {
-			evt = evt || window.event;
-			if (evt.keyCode == 27) closeViewer();
-		};
-
-		document.addEventListener("mousemove", function () {});
-	}, [file]);
-
-	useEffect(() => {
 		hideWindowMenu();
 		return () => showWindowMenu();
 	}, []);

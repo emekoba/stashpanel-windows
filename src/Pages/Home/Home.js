@@ -71,17 +71,22 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 			"keydown",
 			(ev) => {
 				ev = ev || window.event;
-				let key = ev.which || ev.keyCode;
 
-				let ctrl = ev.ctrlKey ? ev.ctrlKey : key === 17 ? true : false;
+				const key = ev.which || ev.keyCode;
 
-				if (key == 86 && ctrl) {
-					openTextEditor();
-				} else if (key == 67 && ctrl) {
-					// If key pressed is C and if ctrl is true.
-					console.log("Ctrl+C is pressed.");
+				const ctrl = ev.ctrlKey ? ev.ctrlKey : key === 17 ? true : false;
 
-					closeTextEditor();
+				switch (key) {
+					case 86:
+						if (ctrl) openTextEditor();
+						break;
+
+					case 27:
+						closeTextEditor();
+						break;
+
+					default:
+						break;
 				}
 			},
 			false

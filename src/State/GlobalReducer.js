@@ -1,6 +1,6 @@
 import { LoaderState } from "../Components/Loader/Loader";
 import { isObject, DispatchCommands, HomeViewType } from "../Global/Globals";
-import { bg3 } from "../Resources/Resources";
+import { bg3, notification1 } from "../Resources/Resources";
 
 export const stashPanelGlobalState = {
 	userDp: "",
@@ -46,6 +46,12 @@ export const stashPanelGlobalState = {
 
 	settings: {},
 };
+
+function playAudioNotification(type) {
+	const audio = new Audio(notification1);
+
+	audio.play();
+}
 
 function globalReducer(state = stashPanelGlobalState, action) {
 	switch (action.type) {
@@ -162,6 +168,11 @@ function globalReducer(state = stashPanelGlobalState, action) {
 					type: action.payload.type,
 				},
 			};
+			break;
+
+		case DispatchCommands.PLAY_ALERT:
+			playAudioNotification(action.payload);
+			return state;
 			break;
 
 		default:

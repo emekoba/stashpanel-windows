@@ -1,14 +1,24 @@
 import "./stashpanel.css";
 import Home from "./Pages/Home/Home";
 import MenuBar from "./Components/MenuBar/MenuBar";
-import { CloseIcon, MenuIcon, MinimizeIcon } from "./Resources/Resources";
+import {
+	CloseIcon,
+	MenuIcon,
+	MinimizeIcon,
+	notification1,
+} from "./Resources/Resources";
 import firebase, { database, getUser } from "./Services/firebase.service";
 import { useEffect, useState } from "react";
 import Onboarding from "./Pages/Onboarding/Onboarding";
 import Loader, { LoaderState } from "./Components/Loader/Loader";
-import { DispatchCommands, FileState } from "./Global/Globals";
+import {
+	DispatchCommands,
+	FileState,
+	NotificationType,
+} from "./Global/Globals";
 import { connect } from "react-redux";
 import Viewer from "./Pages/Viewer/Viewer";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 
 function StashPanel({
 	userId,
@@ -24,12 +34,13 @@ function StashPanel({
 	updateSettings,
 	updateUserDp,
 	windowMenuVisible,
-	closeViewer,
 	fileViewerOpen,
+	closeViewer,
+	playAlert,
 }) {
 	const [isLoggedIn, setIsLoggedIn] = useState(true);
 
-	//! use whatsapp alert for stashpanel alerts when new file is staged.........
+	const [firstDraw, setFirstDraw] = useState(true);
 
 	useEffect(() => {
 		if (isLoggedIn) {
@@ -98,6 +109,11 @@ function StashPanel({
 		// 	toggleNetworkStatus(await checkOnlineStatus())
 		// );
 
+		document.body.onkeydown = (evt) => {
+			evt = evt || window.event;
+			if (evt.keyCode == 27) closeViewer();
+		};
+
 		window.addEventListener("online", () => {
 			console.log(true);
 
@@ -159,6 +175,9 @@ function StashPanel({
 				},
 				(device_snapshot) => {
 					console.log("%c device reads (for other devices)", "color:lightblue");
+
+					if (firstDraw) setFirstDraw(false);
+					else playAlert(NotificationType.NEW_FILE);
 
 					device_snapshot.docs.forEach((doc, idx) => {
 						let _each_device_in_collection = doc.data();
@@ -343,6 +362,12 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
+		playAlert: (notificationType) =>
+			dispatch({
+				type: DispatchCommands.PLAY_ALERT,
+				payload: notificationType,
+			}),
+
 		startLoader: (loadState) =>
 			dispatch({
 				type: DispatchCommands.START_LOADER,
@@ -393,6 +418,11 @@ function mapDispatchToProps(dispatch) {
 			dispatch({
 				type: DispatchCommands.UPDATE_USER_DP,
 				payload: dp,
+			}),
+
+		closeViewer: () =>
+			dispatch({
+				type: DispatchCommands.CLOSE_FILE,
 			}),
 	};
 }

@@ -47,6 +47,10 @@ export const FileState = {
 	STASHED: "STASHED",
 };
 
+export const NotificationType = {
+	NEW_FILE: "NEW_FILE",
+};
+
 export const DispatchCommands = {
 	START_LOADER: "START_LOADER",
 	STOP_LOADER: "STOP_LOADER",
@@ -65,6 +69,7 @@ export const DispatchCommands = {
 	TOGGLE_HOME_VIEW_TYPE: "TOGGLE_HOME_VIEW_TYPE",
 	CLOSE_FILE: "CLOSE_FILE",
 	OPEN_FILE: "OPEN_FILE",
+	PLAY_ALERT: "PLAY_ALERT",
 };
 
 export function generateId(length) {

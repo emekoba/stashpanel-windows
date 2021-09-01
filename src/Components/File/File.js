@@ -68,10 +68,10 @@ function File({
 
 			width: boxtypes[type]?.width ?? 100,
 			height: boxtypes[type]?.height ?? 100,
-			// background: isExternal ? "var(--orange-glass)" : "var(--glass)",
-			background: isExternal
-				? ColorWheel[Math.floor(Math.random() * ColorWheel.length)]
-				: "var(--glass)",
+			background: isExternal ? "var(--orange-glass)" : "var(--glass)",
+			// background: isExternal
+			// 	? ColorWheel[Math.floor(Math.random() * ColorWheel.length)]
+			// 	: "var(--glass)",
 		},
 
 		archiveVariant: { position: "relative", margin: 6, marginLeft: 10 },
