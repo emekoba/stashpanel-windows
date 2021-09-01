@@ -34,18 +34,16 @@ import FileOptionsMenu from "../../Components/FileOptionsMenu/FileOptionsMenu";
 import TextEditor from "../TextEditor/TextEditor";
 import Settings from "../Settings/Settings";
 import { connect } from "react-redux";
-import { DispatchCommands, HomeViewType } from "../../Global/Globals";
+import {
+	DispatchCommands,
+	HomeViewType,
+	FileState,
+} from "../../Global/Globals";
 
 function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 	const [tilting, settilting] = useState(false);
 
 	const [filemenu, setfilemenu] = useState({
-		isOpen: false,
-		file: "",
-		type: "",
-	});
-
-	const [viewer, setviewer] = useState({
 		isOpen: false,
 		file: "",
 		type: "",
@@ -106,6 +104,18 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 		// };
 	}, []);
 
+	useEffect(() => {
+		const files = document.getElementsByClassName("file");
+
+		// Array.from(files).forEach((file) => {
+		// 	file.addEventListener("contextmenu", (event) => {
+		// 		event.preventDefault();
+		// 		event.stopPropagation();
+		// 		if (fileState !== FileState.STASHED) openFileMenu?.(file, type);
+		// 	});
+		// });
+	}, []);
+
 	// window.addEventListener("resize", () => readjustFilePosition(homeDb));
 
 	function openHomeMenu(x, y) {
@@ -128,10 +138,6 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 
 	function removeFile(name) {
 		removeFileFromStage(name);
-	}
-
-	function openFile(file, type) {
-		setviewer({ ...viewer, isOpen: true, file: file, type: type });
 	}
 
 	function openFileMenu(file, type) {
@@ -238,27 +244,37 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 	}
 
 	function getFiles() {
-		let _all_files = Object.keys(homeDb).map((key, _) => (
-			<File
-				id={homeDb[key]?.id}
-				key={homeDb[key]?.name}
-				name={homeDb[key]?.name}
-				date={homeDb[key]?.date}
-				type={homeDb[key]?.type}
-				posX={homeDb[key]?.x}
-				posY={homeDb[key]?.y}
-				file={homeDb[key]?.file}
-				link={homeDb[key]?.link}
-				path={homeDb[key]?.path}
-				removeFile={removeFile}
-				progress={homeDb[key]?.progress}
-				openFile={openFile}
-				openFileMenu={openFileMenu}
-				isExternal={homeDb[key]?.isExternal}
-				fileState={homeDb[key]?.fileState}
-				ownerDp={homeDb[key]?.ownerDp}
-			/>
-		));
+		const _all_files = Object.keys(homeDb).map((key, _) => {
+			// document
+			// 	.getElementById(homeDb[key]?.id)
+			// 	.addEventListener("contextmenu", (event) => {
+			// 		event.preventDefault();
+			// 		event.stopPropagation();
+			// 		if (homeDb[key]?.fileState !== FileState.STASHED)
+			// 			openFileMenu(homeDb[key]?.file, homeDb[key]?.type);
+			// 	});
+
+			return (
+				<File
+					id={homeDb[key]?.id}
+					key={homeDb[key]?.name}
+					name={homeDb[key]?.name}
+					date={homeDb[key]?.date}
+					type={homeDb[key]?.type}
+					posX={homeDb[key]?.x}
+					posY={homeDb[key]?.y}
+					file={homeDb[key]?.file}
+					link={homeDb[key]?.link}
+					path={homeDb[key]?.path}
+					removeFile={removeFile}
+					progress={homeDb[key]?.progress}
+					openFileMenu={openFileMenu}
+					isExternal={homeDb[key]?.isExternal}
+					fileState={homeDb[key]?.fileState}
+					ownerDp={homeDb[key]?.ownerDp}
+				/>
+			);
+		});
 
 		return _all_files;
 	}
@@ -311,14 +327,6 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 							type={filemenu.type}
 							menuItemPressed={onFileMenuItemPressed}
 						/>
-
-						{viewer.isOpen && (
-							<Viewer
-								file={viewer.file}
-								type={viewer.type}
-								closeViewer={() => setviewer({ ...viewer, isOpen: false })}
-							/>
-						)}
 					</div>
 				</Tilt>
 			</UploadPanel>
@@ -375,7 +383,7 @@ function Slides({ slideControl }) {
 function mapStateToProps(state) {
 	return {
 		homeDb: state.stage,
-		homeViewDb: HomeViewType.GRID,
+		homeViewDb: state.homeView,
 	};
 }
 

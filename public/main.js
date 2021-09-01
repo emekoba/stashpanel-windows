@@ -11,13 +11,13 @@ function createWindow() {
 		minWidth: 500,
 		minHeight: 350,
 
-		maxWidth: 835,
-		maxHeight: 548,
+		// maxWidth: 835,
+		// maxHeight: 548,
+
+		maxWidth: "100%",
+		maxHeight: "100%",
 
 		resizable: true,
-
-		// width: 500,
-		// height: 350,
 
 		frame: false,
 		transparent: true,

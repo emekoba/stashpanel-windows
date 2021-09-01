@@ -5,7 +5,12 @@ import { imageType, videoType, codeType } from "../../Resources/Resources";
 import VideoThumbnail from "react-video-thumbnail";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import { connect } from "react-redux";
-import { HomeViewType, FileState } from "../../Global/Globals";
+import {
+	HomeViewType,
+	FileState,
+	DispatchCommands,
+	ColorWheel,
+} from "../../Global/Globals";
 
 function File({
 	id,
@@ -24,7 +29,7 @@ function File({
 	isExternal,
 	fileState,
 	ownerDp,
-	homeViewDb,
+	homeViewType,
 }) {
 	const [coordinates, setcoordinates] = useState({
 		posX: posX,
@@ -46,22 +51,27 @@ function File({
 
 	const _x = {
 		file: {
-			...(homeViewDb === HomeViewType.GRID
+			...(homeViewType === HomeViewType.GRID
 				? {
 						position: "relative",
 						marginRight: 20,
 						marginBottom: 20,
 				  }
 				: {
+						position: "absolute",
 						top: coordinates.posY - coordinates.diffY,
 						left: coordinates.posX - coordinates.diffX,
 				  }),
 
 			// top: coordinates.posY * 0.01 + "%",
 			// left: coordinates.posX * 0.112 + "%",
+
 			width: boxtypes[type]?.width ?? 100,
 			height: boxtypes[type]?.height ?? 100,
-			background: isExternal ? "var(--orange-glass)" : "var(--glass)",
+			// background: isExternal ? "var(--orange-glass)" : "var(--glass)",
+			background: isExternal
+				? ColorWheel[Math.floor(Math.random() * ColorWheel.length)]
+				: "var(--glass)",
 		},
 
 		archiveVariant: { position: "relative", margin: 6, marginLeft: 10 },
@@ -123,8 +133,20 @@ function File({
 			const file_body = document.getElementById(id);
 
 			if (file_body) {
-				file_body.style.animation = `${`file-in-animation${boxtypes[type]["anim"]} 1.0s forwards`}`;
+				homeViewType === HomeViewType.ROAM
+					? (file_body.style.animation = `${`file-in-animation${boxtypes[type]["anim"]} 1.0s forwards`}`)
+					: (file_body.style.animation = `${`file-in-animation-grid 1.0s forwards`}`);
 			}
+
+			// console.log(file_body.childNodes);
+
+			// file_body.childNodes[2].style.animation = `${`file-inner-child-animation 3.0s forwards`}`;
+
+			// Array.from(file_body.childNodes).map((e) => {
+			// 	if (e.className === "file-image" || e.className === "file-video") {
+			// 		e.style.animation = `${`file-inner-child-animation 3.0s forwards`}`;
+			// 	}
+			// });
 		}
 	}, []);
 
@@ -136,7 +158,9 @@ function File({
 	function resolveFilePreview() {
 		switch (type) {
 			case "image":
-				return <img className="file-image" src={preview} alt={type} />;
+				return (
+					<img className="file-image file-inner" src={preview} alt={type} />
+				);
 
 			case "video":
 				let thumb_height = 90;
@@ -144,6 +168,7 @@ function File({
 
 				return (
 					<div
+						className="file-inner"
 						style={{
 							height: 90,
 							width: 170,
@@ -151,16 +176,19 @@ function File({
 							background: "black",
 							display: "grid",
 							gridTemplateColumns: "1fr 1fr",
+							animation:
+								homeViewType === HomeViewType.ROAM &&
+								"file-in-animation-video-inner 1.0s forwards",
 						}}
 					>
-						<div style={{ width: thumb_width, height: thumb_height }}>
+						{/* <div style={{ width: thumb_width, height: thumb_height }}>
 							<VideoThumbnail
 								videoUrl={preview}
 								style={{ margin: 0 }}
 								height={thumb_height}
 								width={thumb_width}
 							/>
-						</div>
+						</div> */}
 
 						{/* <div style={{ width: thumb_width, height: thumb_height }}></div>
 
@@ -212,7 +240,6 @@ function File({
 
 	return (
 		<Tooltip
-			// open={showdetails}
 			title={
 				<div>
 					<div>{name}</div>
@@ -233,8 +260,7 @@ function File({
 				onMouseLeave={onMouseLeave}
 				onDoubleClick={(e) => {
 					e.stopPropagation();
-
-					if (fileState !== FileState.STASHED) openFile(preview, type);
+					openFile(preview, type);
 				}}
 			>
 				{progress !== 100 && (
@@ -252,7 +278,7 @@ function File({
 
 				{isExternal && <img className="user-indicator" src={ownerDp} />}
 
-				{showdraghandle && homeViewDb === HomeViewType.ROAM && (
+				{showdraghandle && homeViewType === HomeViewType.ROAM && (
 					<div className="file-drag-handle">
 						<DragIndicatorIcon style={{ color: "white", fontSize: 10 }} />
 					</div>
@@ -264,8 +290,21 @@ function File({
 
 function mapStateToProps(state) {
 	return {
-		homeViewDb: state.homeView,
+		homeViewType: state.homeView,
 	};
 }
 
-export default connect(mapStateToProps)(File);
+function mapDispatchToProps(dispatch) {
+	return {
+		openFile: (file, type) =>
+			dispatch({
+				type: DispatchCommands.OPEN_FILE,
+				payload: {
+					file,
+					type,
+				},
+			}),
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(File);

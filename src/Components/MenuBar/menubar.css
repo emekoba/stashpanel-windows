@@ -1,6 +1,5 @@
 .menubar-container {
 	width: 100px;
-	background: red;
 	position: absolute;
 	z-index: var(--menubar-index);
 	padding-left: 20px;

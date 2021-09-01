@@ -13,7 +13,7 @@ app.initializeApp({
 	measurementId: "G-CPVQLP9NQ1",
 });
 
-export function updateUsersCollection(firstname, lastname, email, id) {
+export function updateUsersCollection(firstname, lastname, email, id, dp) {
 	const avatarTypes = [
 		"male",
 		"female",
@@ -26,7 +26,7 @@ export function updateUsersCollection(firstname, lastname, email, id) {
 		"micah",
 	];
 
-	firebase
+	return firebase
 		.firestore()
 		.collection("users")
 		.doc(id)
@@ -34,9 +34,11 @@ export function updateUsersCollection(firstname, lastname, email, id) {
 			firstname,
 			lastname,
 			email,
-			dp: `https://avatars.dicebear.com/api/${
-				avatarTypes[Math.floor(Math.random() * avatarTypes.length)]
-			}/${firstname + lastname}.svg`,
+			dp:
+				dp ??
+				`https://avatars.dicebear.com/api/${
+					avatarTypes[Math.floor(Math.random() * avatarTypes.length)]
+				}/${firstname + lastname}.svg`,
 			country: "nigeria",
 			plan: "free",
 			createdAt: new Date(),
@@ -45,6 +47,14 @@ export function updateUsersCollection(firstname, lastname, email, id) {
 }
 
 export function updateDevicesCollection() {}
+
+export function updateUserDp(userId, img) {
+	firebase
+		.firestore()
+		.collection("users")
+		.doc(userId)
+		.set({ dp: img }, { merge: true });
+}
 
 export function updateDeviceDb(deviceId, fileId) {
 	firebase

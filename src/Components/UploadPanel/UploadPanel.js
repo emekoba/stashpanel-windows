@@ -105,15 +105,14 @@ function UploadPanel({
 		});
 
 		setTimeout(
-			() => {
-				// uploadFile(
-				// 	file[0],
-				// 	getRefinedType(file[0].type),
-				// 	file[0].name,
-				// 	e.clientX,
-				// 	e.clientY
-				// );
-			},
+			() =>
+				uploadFile(
+					file[0],
+					getRefinedType(file[0].type),
+					file[0].name,
+					e.clientX,
+					e.clientY
+				),
 			settings.instantStash ? 0 : settings.stashDelay * 1000
 		);
 	}

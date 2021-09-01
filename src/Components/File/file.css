@@ -19,6 +19,10 @@
 	object-fit: cover;
 }
 
+.file-inner {
+	animation: file-inner-child-animation 5s forwards;
+}
+
 .file-options {
 	position: absolute;
 	bottom: -40px;
@@ -143,6 +147,26 @@
 	}
 }
 
+@keyframes file-in-animation-grid {
+	from {
+		height: 0px;
+	}
+
+	to {
+		height: 100px;
+	}
+}
+
+@keyframes file-out-animation-grid {
+	from {
+		height: 100px;
+	}
+
+	to {
+		height: 0px;
+	}
+}
+
 @keyframes file-in-animation-video {
 	from {
 		height: 0px;
@@ -155,6 +179,18 @@
 	}
 }
 
+@keyframes file-in-animation-video-inner {
+	from {
+		height: 0px;
+		width: 0px;
+	}
+
+	to {
+		height: 90px;
+		width: 170px;
+	}
+}
+
 @keyframes file-out-animation-video {
 	from {
 		height: 100px;
@@ -164,5 +200,15 @@
 	to {
 		height: 0px;
 		width: 0px;
+	}
+}
+
+@keyframes file-inner-child-animation {
+	from {
+		display: none !important;
+	}
+
+	to {
+		display: block !important;
 	}
 }

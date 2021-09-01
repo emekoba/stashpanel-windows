@@ -1,13 +1,22 @@
 import React, { useEffect } from "react";
 import "./viewer.css";
 import ReactPlayer from "react-player/lazy";
+import { connect } from "react-redux";
+import { DispatchCommands } from "../../Global/Globals";
 
-export default function Viewer({ file, type, closeViewer }) {
+function Viewer({ file, type, closeViewer, hideWindowMenu, showWindowMenu }) {
 	useEffect(() => {
-		document.onkeydown = function (evt) {
+		document.body.onkeydown = (evt) => {
 			evt = evt || window.event;
 			if (evt.keyCode == 27) closeViewer();
 		};
+
+		document.addEventListener("mousemove", function () {});
+	}, [file]);
+
+	useEffect(() => {
+		hideWindowMenu();
+		return () => showWindowMenu();
 	}, []);
 
 	function resolveFile() {
@@ -39,6 +48,7 @@ export default function Viewer({ file, type, closeViewer }) {
 				break;
 		}
 	}
+
 	return (
 		<div
 			id="viewer"
@@ -52,3 +62,36 @@ export default function Viewer({ file, type, closeViewer }) {
 		</div>
 	);
 }
+
+function mapStateToProps(state) {
+	return {
+		file: state.fileViewerData.file,
+		type: state.fileViewerData.type,
+	};
+}
+
+function mapDispatchToProps(dispatch) {
+	return {
+		closeViewer: () =>
+			dispatch({
+				type: DispatchCommands.CLOSE_FILE,
+			}),
+
+		hideWindowMenu: () =>
+			dispatch({
+				type: DispatchCommands.HIDE_WINDOW_MENU,
+			}),
+
+		showWindowMenu: () =>
+			dispatch({
+				type: DispatchCommands.SHOW_WINDOW_MENU,
+			}),
+
+		showWindowMenu: () =>
+			dispatch({
+				type: DispatchCommands.SHOW_WINDOW_MENU,
+			}),
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Viewer);

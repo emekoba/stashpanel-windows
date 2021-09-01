@@ -8,4 +8,4 @@ export default function Settings() {
 //? change dp
 //? change name
 //? go to new collection
-//?
+//? instantly preview file when dropped

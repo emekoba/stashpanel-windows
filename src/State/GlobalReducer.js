@@ -9,13 +9,17 @@ export const stashPanelGlobalState = {
 
 	panelOnline: false,
 
+	windowMenuVisible: true,
+
 	userId: "kMSGxfO5H5SmwQoIGKC17b7pvWS2",
 
 	deviceId: "fukvUJHvPZ3KfGRNlvUd",
 
 	collectionId: "eQFU59ZiUm2bNViUU29Q",
 
-	homeView: HomeViewType.GRID,
+	homeView: HomeViewType.ROAM,
+
+	fileViewerData: { isOpen: false, file: "", type: "" },
 
 	stash: {},
 
@@ -115,12 +119,49 @@ function globalReducer(state = stashPanelGlobalState, action) {
 			return { ...state, settings: { ...state.settings, ...action.payload } };
 			break;
 
-		case DispatchCommands.ADD_USER_DP:
+		case DispatchCommands.UPDATE_USER_DP:
 			return { ...state, userDp: action.payload };
 			break;
 
 		case DispatchCommands.ADD_COLLECTION_BANNER:
 			return { ...state, collectionBanner: action.payload };
+			break;
+
+		case DispatchCommands.HIDE_WINDOW_MENU:
+			return { ...state, windowMenuVisible: false };
+			break;
+
+		case DispatchCommands.SHOW_WINDOW_MENU:
+			return { ...state, windowMenuVisible: true };
+			break;
+
+		case DispatchCommands.TOGGLE_HOME_VIEW_TYPE:
+			return {
+				...state,
+				homeView:
+					state.homeView === HomeViewType.GRID
+						? HomeViewType.ROAM
+						: HomeViewType.GRID,
+			};
+			break;
+
+		case DispatchCommands.CLOSE_FILE:
+			return {
+				...state,
+				fileViewerData: { ...state.fileViewerData, isOpen: false },
+			};
+			break;
+
+		case DispatchCommands.OPEN_FILE:
+			return {
+				...state,
+				fileViewerData: {
+					...state.fileViewerData,
+					isOpen: true,
+					file: action.payload.file,
+					type: action.payload.type,
+				},
+			};
 			break;
 
 		default:

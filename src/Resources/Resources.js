@@ -20,6 +20,7 @@ import bg19 from "./Background/background19.jpg";
 import bg20 from "./Background/background20.jpg";
 import bg21 from "./Background/background21.jpg";
 
+import DefaultPr from "./Profile/DefaultPr.png";
 import pr1 from "./Profile/Profile1.jpg";
 import pr2 from "./Profile/Profile2.jpg";
 import pr3 from "./Profile/Profile3.jpg";
@@ -73,6 +74,7 @@ export {
 	bg19,
 	bg20,
 	bg21,
+	DefaultPr,
 	pr1,
 	pr2,
 	pr3,

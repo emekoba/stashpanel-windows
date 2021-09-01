@@ -8,6 +8,7 @@ import Onboarding from "./Pages/Onboarding/Onboarding";
 import Loader, { LoaderState } from "./Components/Loader/Loader";
 import { DispatchCommands, FileState } from "./Global/Globals";
 import { connect } from "react-redux";
+import Viewer from "./Pages/Viewer/Viewer";
 
 function StashPanel({
 	userId,
@@ -21,9 +22,12 @@ function StashPanel({
 	panelOnline,
 	toggleNetworkStatus,
 	updateSettings,
-	addUserDp,
+	updateUserDp,
+	windowMenuVisible,
+	closeViewer,
+	fileViewerOpen,
 }) {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(true);
 
 	//! use whatsapp alert for stashpanel alerts when new file is staged.........
 
@@ -69,7 +73,7 @@ function StashPanel({
 		firebase?.auth().onAuthStateChanged((user) => {
 			if (user) {
 				updateUserId(user.uid);
-				getUser(user.uid).then((userInfo) => addUserDp(userInfo["dp"]));
+				getUser(user.uid).then((userInfo) => updateUserDp(userInfo["dp"]));
 
 				setIsLoggedIn(true);
 			} else {
@@ -189,8 +193,6 @@ function StashPanel({
 						_all_device_files = [].concat.apply([], _all_device_files);
 					});
 
-					console.log(userInfoRedundancyCheck);
-
 					queryMultipleFiles(_all_device_files, userInfoRedundancyCheck, {
 						isExternal: true,
 					}).then((staged_files) => addFilesToStage(staged_files));
@@ -297,21 +299,25 @@ function StashPanel({
 
 	return (
 		<div className="stashpanel">
-			<div className="window-menu">
-				<div className="window-menu-item">
-					<MinimizeIcon style={{ ..._x.menuItem, paddingBottom: 5 }} />
-				</div>
+			{windowMenuVisible && (
+				<div className="window-menu">
+					<div className="window-menu-item">
+						<MinimizeIcon style={{ ..._x.menuItem, paddingBottom: 5 }} />
+					</div>
 
-				<div className="window-menu-item drag-window">
-					<MenuIcon style={_x.menuItem} />
-				</div>
+					<div className="window-menu-item drag-window">
+						<MenuIcon style={_x.menuItem} />
+					</div>
 
-				<div className="window-menu-item">
-					<CloseIcon style={_x.menuItem} />
+					<div className="window-menu-item">
+						<CloseIcon style={_x.menuItem} />
+					</div>
 				</div>
-			</div>
+			)}
 
 			<Loader />
+
+			{fileViewerOpen && <Viewer />}
 
 			{isLoggedIn ? (
 				<>
@@ -330,6 +336,8 @@ function mapStateToProps(state) {
 		userId: state.userId,
 		collectionId: state.collectionId,
 		panelOnline: state.panelOnline,
+		windowMenuVisible: state.windowMenuVisible,
+		fileViewerOpen: state.fileViewerData.isOpen,
 	};
 }
 
@@ -381,9 +389,9 @@ function mapDispatchToProps(dispatch) {
 				payload: settings,
 			}),
 
-		addUserDp: (dp) =>
+		updateUserDp: (dp) =>
 			dispatch({
-				type: DispatchCommands.ADD_USER_DP,
+				type: DispatchCommands.UPDATE_USER_DP,
 				payload: dp,
 			}),
 	};

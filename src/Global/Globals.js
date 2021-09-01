@@ -1,3 +1,41 @@
+export const ColorWheel = [
+	"limegreen",
+	"dodgerblue",
+	"#EEDD82",
+
+	"#f032e6",
+	"#fabebe",
+	"#008080",
+	"#e6beff",
+	"#9a6324",
+	"#fffac8",
+	"#800000",
+	"#aaffc3",
+	"#808000",
+	"#ffd8b1",
+	"#000075",
+	"#808080",
+	"#ffffff",
+	"#3cb44b",
+	"#000000",
+	"#f58231",
+	"#e6194b",
+	"#911eb4",
+	"#46f0f0",
+	"#ffe119",
+	"#4363d8",
+	"#dd82ee",
+	"#bcf60c",
+
+	"tomato",
+	"yellow",
+	"purple",
+	"#1A1A1A",
+	"brown",
+	"teal",
+	"goldenrod",
+];
+
 export const HomeViewType = {
 	GRID: "GRID",
 	ROAM: "ROAM",
@@ -20,8 +58,13 @@ export const DispatchCommands = {
 	TOGGLE_NETWORK_STATUS: "TOGGLE_NETWORK_STATUS",
 	REMOVE_FILE_FROM_STASH: "REMOVE_FILE_FROM_STASH",
 	UPDATE_SETTINGS: "UPDATE_SETTINGS",
-	ADD_USER_DP: "ADD_USER_DP",
+	UPDATE_USER_DP: "UPDATE_USER_DP",
 	ADD_COLLECTION_BANNER: "ADD_COLLECTION_BANNER",
+	HIDE_WINDOW_MENU: "HIDE_WINDOW_MENU",
+	SHOW_WINDOW_MENU: "SHOW_WINDOW_MENU",
+	TOGGLE_HOME_VIEW_TYPE: "TOGGLE_HOME_VIEW_TYPE",
+	CLOSE_FILE: "CLOSE_FILE",
+	OPEN_FILE: "OPEN_FILE",
 };
 
 export function generateId(length) {
