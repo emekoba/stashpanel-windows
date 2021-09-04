@@ -46,7 +46,35 @@ export function updateUsersCollection(firstname, lastname, email, id, dp) {
 		});
 }
 
-export function updateDevicesCollection() {}
+export function switchActiveCollection(userId, collectionId) {}
+
+export function addNewCollection(userId, collectionId) {}
+
+export function changeActiveCollection(deviceId, collectionId) {
+	//? check if document exists...
+
+	//? check if banned from collection or if allowed....
+
+	firebase
+		.firestore()
+		.collection(`panel-collections`)
+		.doc(collectionId)
+		.set(
+			{
+				members: firebase.firestore.FieldValue.arrayUnion.apply(this, [
+					// {
+					// 	fileId,
+					// 	status: "staged",
+					// },
+				]),
+			},
+			{ merge: true }
+		)
+		.then((res) => {
+			console.log(res);
+		})
+		.catch((err) => console.log(err));
+}
 
 export function updateUserDp(userId, img) {
 	firebase
@@ -81,6 +109,7 @@ export function updateDeviceDb(deviceId, fileId) {
 export function addFileToDb(
 	collection,
 	deviceId,
+	fileId,
 	file_name,
 	file_type,
 	url,
@@ -90,7 +119,8 @@ export function addFileToDb(
 	firebase
 		.firestore()
 		.collection(`files`)
-		.add(
+		.doc(fileId)
+		.set(
 			{
 				deviceOrigin: deviceId,
 				link: url,
@@ -102,9 +132,7 @@ export function addFileToDb(
 			},
 			{ merge: true }
 		)
-		.then((docRef) => {
-			updateDeviceDb(deviceId, docRef.id);
-		})
+		.then((docRef) => updateDeviceDb(deviceId, fileId))
 		.catch((err) => console.log(err));
 }
 

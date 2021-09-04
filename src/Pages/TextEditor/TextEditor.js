@@ -2,8 +2,10 @@ import React, { createRef, useEffect } from "react";
 import "./texteditor.css";
 import { Editor, EditorState, RichUtils } from "draft-js";
 import "draft-js/dist/Draft.css";
+import { connect } from "react-redux";
+import { DispatchCommands } from "../../Global/Globals";
 
-export default function TextEditor({ isOpen }) {
+function TextEditor({ isOpen, hideWindowMenu, showWindowMenu }) {
 	const [editorState, setEditorState] = React.useState(() =>
 		EditorState.createEmpty()
 	);
@@ -18,28 +20,44 @@ export default function TextEditor({ isOpen }) {
 		editor.style.animation = `${
 			isOpen
 				? "open-editor-animation 0.4s forwards"
-				: "close-editor-animation 0.4s forwards"
+				: "close-editor-animation 0.2s forwards"
 		}`;
 
 		setTimeout(
-			() => {
+			() =>
 				Array.from(editor.childNodes).map((each) => {
-					each.style.display = `${isOpen ? "flex" : "none"}`;
+					each.style.visibility = `${isOpen ? "visible" : "hidden"}`;
 
 					return null;
-				});
-			},
-			isOpen ? 1000 : 0
+				}),
+			100
+		);
+
+		setTimeout(
+			() => (editor.style.display = `${isOpen ? "flex" : "none"}`),
+			200
 		);
 
 		setTimeout(() => {
-			editor.style.display = `${isOpen ? "flex" : "none"}`;
-		}, 1050);
+			if (isOpen) hideWindowMenu();
+			else showWindowMenu();
+		}, 200);
 	}, [isOpen]);
 
+	useEffect(() => editorController.current.focus(), []);
+
 	useEffect(() => {
-		editorController.current.focus();
-	}, [editorController]);
+		navigator.clipboard
+			.readText()
+			.then((text) => {
+				console.log("Pasted content: ", text);
+
+				editorController.current.setEditorState(text);
+			})
+			.catch((err) =>
+				console.error("Failed to read clipboard contents: ", err)
+			);
+	}, [isOpen]);
 
 	function onChange(editorState) {
 		setEditorState(editorState);
@@ -64,28 +82,24 @@ export default function TextEditor({ isOpen }) {
 
 	return (
 		<div className="text-editor" onClick={(e) => e.stopPropagation()}>
-			<div className="" style={_x.editor}>
-				<BlockStyleControls
-					editorState={editorState}
-					onToggle={toggleBlockType}
-				/>
+			<BlockStyleControls
+				editorState={editorState}
+				onToggle={toggleBlockType}
+			/>
 
-				<InlineStyleControls
-					editorState={editorState}
-					onToggle={toggleInlineStyle}
-				/>
+			<InlineStyleControls
+				editorState={editorState}
+				onToggle={toggleInlineStyle}
+			/>
 
-				<hr style={{ width: "100%", borderColor: "var(--dark-glass)" }} />
+			<hr style={{ width: "100%", borderColor: "lightgrey" }} />
 
-				<div style={{ marginTop: 10 }}>
-					<Editor
-						editorState={editorState}
-						onChange={setEditorState}
-						ref={editorController}
-						handleKeyCommand={handleKeyCommand}
-					/>
-				</div>
-			</div>
+			<Editor
+				editorState={editorState}
+				onChange={setEditorState}
+				ref={editorController}
+				handleKeyCommand={handleKeyCommand}
+			/>
 		</div>
 	);
 }
@@ -104,7 +118,11 @@ class StyleButton extends React.Component {
 			className += " RichEditor-activeButton";
 		}
 		return (
-			<span className={className} onMouseDown={this.onToggle}>
+			<span
+				style={{ cursor: "pointer" }}
+				className={className}
+				onMouseDown={this.onToggle}
+			>
 				{this.props.label}
 			</span>
 		);
@@ -174,15 +192,18 @@ function InlineStyleControls(props) {
 	);
 }
 
-const _x = {
-	editor: {
-		border: "1px solid #ccc",
-		cursor: "text",
-		height: "80vh",
-		width: "80vw",
-		padding: 20,
-		background: "#ccc",
-		display: "flex",
-		flexDirection: "column",
-	},
-};
+function mapDispatchToProps(dispatch) {
+	return {
+		hideWindowMenu: () =>
+			dispatch({
+				type: DispatchCommands.HIDE_WINDOW_MENU,
+			}),
+
+		showWindowMenu: () =>
+			dispatch({
+				type: DispatchCommands.SHOW_WINDOW_MENU,
+			}),
+	};
+}
+
+export default connect(null, mapDispatchToProps)(TextEditor);

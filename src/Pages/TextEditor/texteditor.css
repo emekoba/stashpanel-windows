@@ -5,8 +5,13 @@
 	top: 0px;
 	z-index: var(--text-editor-index);
 	display: flex;
-	align-items: center;
-	justify-content: center;
+	border: 1px solid #ccc;
+	cursor: text;
+	height: 100vh;
+	padding: 20px;
+	background: #ccc;
+	display: flex;
+	flex-direction: column;
 
 	display: none;
 }
@@ -14,24 +19,28 @@
 @keyframes open-editor-animation {
 	from {
 		height: 0vh;
-		display: none;
+		padding-top: 0px;
+		padding-bottom: 0px;
 	}
 
 	to {
 		height: 100vh;
-		display: flex;
+		padding-top: 20px;
+		padding-bottom: 20px;
 	}
 }
 
 @keyframes close-editor-animation {
 	from {
 		height: 100vh;
-		display: flex;
+		padding-top: 20px;
+		padding-bottom: 20px;
 	}
 
 	to {
 		height: 0vh;
-		display: none;
+		padding-top: 0px;
+		padding-bottom: 0px;
 	}
 }
 
@@ -90,8 +99,8 @@
 
 .RichEditor-styleButton {
 	color: black;
-	cursor: pointer;
-	margin-right: 16px;
+	cursor: topnter;
+	margin-bottom: 16px;
 	padding: 2px 0;
 	display: inline-block;
 	padding: 8px;

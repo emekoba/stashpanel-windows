@@ -9,29 +9,48 @@
 	align-items: center;
 	background: var(--dark-glass);
 	padding: 10px;
+
 	display: none;
 }
 
 @keyframes open-menu-animation {
 	from {
 		width: 0vw;
-		display: none;
+		opacity: 0;
+		padding-left: 0px;
+		padding-right: 0px;
 	}
 
 	to {
 		width: 45px;
-		display: flex;
+		opacity: 1;
+		padding-left: 10px;
+		padding-right: 10px;
 	}
 }
 
 @keyframes close-menu-animation {
 	from {
 		width: 45px;
-		display: flex;
+		opacity: 1;
+		padding-left: 10px;
+		padding-right: 10px;
 	}
 
 	to {
 		width: 0vw;
-		display: none;
+		opacity: 0;
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+}
+
+@keyframes file-menu-inner-animation {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
 	}
 }

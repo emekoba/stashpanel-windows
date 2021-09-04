@@ -1,28 +1,25 @@
 import "./stashpanel.css";
 import Home from "./Pages/Home/Home";
 import MenuBar from "./Components/MenuBar/MenuBar";
-import {
-	CloseIcon,
-	MenuIcon,
-	MinimizeIcon,
-	notification1,
-} from "./Resources/Resources";
+import { CloseIcon, MenuIcon, MinimizeIcon } from "./Resources/Resources";
 import firebase, { database, getUser } from "./Services/firebase.service";
 import { useEffect, useState } from "react";
 import Onboarding from "./Pages/Onboarding/Onboarding";
-import Loader, { LoaderState } from "./Components/Loader/Loader";
+import Loader from "./Components/Loader/Loader";
 import {
+	CollectionTypes,
 	DispatchCommands,
-	FileState,
-	NotificationType,
+	FileStates,
+	LoaderStates,
+	NotificationTypes,
 } from "./Global/Globals";
 import { connect } from "react-redux";
 import Viewer from "./Pages/Viewer/Viewer";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import Settings from "./Pages/Settings/Settings";
 
 function StashPanel({
 	userId,
-	collectionId,
+	activeCollection,
 	startLoader,
 	stopLoader,
 	updateUserId,
@@ -37,59 +34,32 @@ function StashPanel({
 	fileViewerOpen,
 	closeViewer,
 	playAlert,
+	settingsOpen,
+	updateCollection,
 }) {
 	const [isLoggedIn, setIsLoggedIn] = useState(true);
 
 	const [firstDraw, setFirstDraw] = useState(true);
 
 	useEffect(() => {
-		if (isLoggedIn) {
-			if (!panelOnline) {
-				console.log("%c panel online", "color:limegreen");
-
-				startLoader(LoaderState.LOADING);
-
-				database
-					.collection("panel-collections")
-					.doc(collectionId)
-					.get()
-					.then((doc) => {
-						console.log(
-							"%c panel collection reads (for mine and other devices)",
-							"color:lightblue"
-						);
-
-						const all_other_users = [];
-
-						if (doc.data()) {
-							const _other_users = doc
-								.data()
-								.members.filter((e) => e !== userId);
-							_other_users.map((each_user) => all_other_users.push(each_user));
-						}
-
-						fetchOtherUsersDevices(all_other_users);
-					});
-
-				fetchMyDevice(userId);
-			} else {
-				console.log("%c panel offline", "color:tomato");
-
-				startLoader(LoaderState.OFFLINE);
-			}
-		}
-	}, [collectionId, panelOnline, isLoggedIn]);
-
-	useEffect(() => {
 		firebase?.auth().onAuthStateChanged((user) => {
 			if (user) {
 				updateUserId(user.uid);
-				getUser(user.uid).then((userInfo) => updateUserDp(userInfo["dp"]));
+
+				getUser(user.uid).then((userInfo) => {
+					updateCollection(CollectionTypes.ACTIVE, {
+						id: userInfo["activeCollection"],
+					});
+
+					updateUserDp(userInfo["dp"]);
+				});
 
 				setIsLoggedIn(true);
 			} else {
 				//? if no longer logged in switch to onboarding
+
 				setIsLoggedIn(false);
+
 				clearStageAndStash();
 			}
 		});
@@ -115,17 +85,72 @@ function StashPanel({
 		};
 
 		window.addEventListener("online", () => {
-			console.log(true);
+			console.log("%c panel online", "color:limegreen");
 
 			toggleNetworkStatus(true);
 		});
 
 		window.addEventListener("offline", () => {
-			console.log(false);
+			console.log("%c panel offline", "color:tomato");
 
 			toggleNetworkStatus(false);
 		});
 	}, []);
+
+	useEffect(() => {
+		if (isLoggedIn && panelOnline) {
+			startLoader(LoaderStates.LOADING);
+
+			database
+				.collection("panel-collections")
+				.where("members", "array-contains", userId)
+				.get()
+				.then((doc) => {
+					console.log(
+						"%c panel collection reads (for mine and other devices)",
+						"color:lightblue"
+					);
+
+					let _member_collections = [];
+
+					doc.docs.forEach((each_collection) => {
+						if (each_collection.id === activeCollection) {
+							updateCollection(CollectionTypes.ACTIVE, {
+								name: each_collection.data()["name"],
+								banner: each_collection.data()["bannerImage"],
+								creator: each_collection.data()["creator"],
+								members: each_collection.data()["members"],
+							});
+
+							const all_other_users = [];
+
+							if (each_collection.data()) {
+								const _other_users = each_collection
+									.data()
+									.members.filter((e) => e !== userId);
+
+								_other_users.map((each_user) =>
+									all_other_users.push(each_user)
+								);
+							}
+
+							fetchOtherUsersDevices(all_other_users);
+						} else {
+							_member_collections.push({
+								...each_collection.data(),
+								id: each_collection.id,
+							});
+						}
+					});
+
+					updateCollection(CollectionTypes.MEMBER, _member_collections);
+				});
+
+			fetchMyDevice(userId);
+		} else {
+			startLoader(LoaderStates.OFFLINE);
+		}
+	}, [activeCollection, panelOnline, isLoggedIn]);
 
 	function fetchMyDevice(userId) {
 		database
@@ -177,7 +202,7 @@ function StashPanel({
 					console.log("%c device reads (for other devices)", "color:lightblue");
 
 					if (firstDraw) setFirstDraw(false);
-					else playAlert(NotificationType.NEW_FILE);
+					else playAlert(NotificationTypes.NEW_FILE);
 
 					device_snapshot.docs.forEach((doc, idx) => {
 						let _each_device_in_collection = doc.data();
@@ -270,7 +295,7 @@ function StashPanel({
 											name: _file_data?.["name"],
 											progress: 0,
 											isExternal: options?.isExternal,
-											fileState: FileState.STAGED,
+											FileStates: FileStates.STAGED,
 											ownerDp: options?.isExternal && resolveDp(eachFile.id),
 										},
 									};
@@ -289,7 +314,7 @@ function StashPanel({
 											name: _file_data?.["name"],
 											progress: 0,
 											isExternal: options?.isExternal,
-											fileState: FileState.STASHED,
+											FileStates: FileStates.STASHED,
 										},
 									};
 								}
@@ -306,7 +331,7 @@ function StashPanel({
 							name: _file_data?.["name"],
 							progress: 0,
 							isExternal: options?.isExternal,
-							fileState: FileState.STAGED,
+							FileStates: FileStates.STAGED,
 							ownerDp: options?.isExternal && resolveDp(eachFile.id),
 						};
 					}
@@ -316,11 +341,28 @@ function StashPanel({
 			});
 	}
 
+	function closeWindow() {
+		// const remote = window.require ? window.require("electron").remote : null;
+		// const WIN = remote.getCurrentWindow();
+		// WIN.close();
+		// const remote = require("electron").remote;
+		// let w = remote.getCurrentWindow();
+		// w.close();
+		// const { app } = require("electron");
+		// app.exit(0);
+	}
+
+	function minimizeWindow() {
+		// const remote = window.require ? window.require("electron").remote : null;
+		// const WIN = remote.getCurrentWindow();
+		// WIN.minimize();
+	}
+
 	return (
 		<div className="stashpanel">
 			{windowMenuVisible && (
 				<div className="window-menu">
-					<div className="window-menu-item">
+					<div className="window-menu-item" onClick={minimizeWindow}>
 						<MinimizeIcon style={{ ..._x.menuItem, paddingBottom: 5 }} />
 					</div>
 
@@ -328,7 +370,7 @@ function StashPanel({
 						<MenuIcon style={_x.menuItem} />
 					</div>
 
-					<div className="window-menu-item">
+					<div className="window-menu-item" onClick={closeWindow}>
 						<CloseIcon style={_x.menuItem} />
 					</div>
 				</div>
@@ -342,6 +384,7 @@ function StashPanel({
 				<>
 					<MenuBar />
 					<Home />
+					{settingsOpen && <Settings />}
 				</>
 			) : (
 				<Onboarding />
@@ -353,19 +396,20 @@ function StashPanel({
 function mapStateToProps(state) {
 	return {
 		userId: state.userId,
-		collectionId: state.collectionId,
+		activeCollection: state.collections.active.id,
 		panelOnline: state.panelOnline,
 		windowMenuVisible: state.windowMenuVisible,
 		fileViewerOpen: state.fileViewerData.isOpen,
+		settingsOpen: state.settings.isOpen,
 	};
 }
 
 function mapDispatchToProps(dispatch) {
 	return {
-		playAlert: (notificationType) =>
+		playAlert: (NotificationTypes) =>
 			dispatch({
 				type: DispatchCommands.PLAY_ALERT,
-				payload: notificationType,
+				payload: NotificationTypes,
 			}),
 
 		startLoader: (loadState) =>
@@ -423,6 +467,13 @@ function mapDispatchToProps(dispatch) {
 		closeViewer: () =>
 			dispatch({
 				type: DispatchCommands.CLOSE_FILE,
+			}),
+
+		updateCollection: (collectionType, payload) =>
+			dispatch({
+				type: DispatchCommands.UPDATE_COLLECTION,
+				collectionType,
+				payload,
 			}),
 	};
 }

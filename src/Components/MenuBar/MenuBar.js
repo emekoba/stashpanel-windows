@@ -5,6 +5,7 @@ import {
 	settings2,
 	gridview,
 	DefaultPr,
+	note1,
 } from "../../Resources/Resources";
 import { connect } from "react-redux";
 import { DispatchCommands } from "../../Global/Globals";
@@ -14,9 +15,10 @@ function MenuBar({
 	userId,
 	userDp,
 	windowMenuVisible,
-	toggleHomeViewType,
+	toggleHomeViewTypes,
 	updateUserDp,
 	triggerPopup,
+	openSettings,
 }) {
 	const [menuopen, setmenuopen] = useState(false);
 
@@ -84,17 +86,22 @@ function MenuBar({
 			>
 				<img alt="" src={devices2} className="menubar-item bounce-on-click" />
 
-				<img alt="" src={devices2} className="menubar-item bounce-on-click" />
+				<img alt="" src={note1} className="menubar-item bounce-on-click" />
 
 				<img
 					alt=""
 					src={gridview}
 					className="menubar-item bounce-on-click"
 					style={{ width: 23 }}
-					onClick={toggleHomeViewType}
+					onClick={toggleHomeViewTypes}
 				/>
 
-				<img alt="" src={settings2} className="menubar-item bounce-on-click" />
+				<img
+					alt=""
+					src={settings2}
+					className="menubar-item bounce-on-click"
+					onClick={openSettings}
+				/>
 			</div>
 
 			<div>
@@ -128,7 +135,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
 	return {
-		toggleHomeViewType: () =>
+		toggleHomeViewTypes: () =>
 			dispatch({
 				type: DispatchCommands.TOGGLE_HOME_VIEW_TYPE,
 			}),
@@ -143,6 +150,11 @@ function mapDispatchToProps(dispatch) {
 			dispatch({
 				type: DispatchCommands.TOGGLE_HOME_VIEW_TYPE,
 				payload: options,
+			}),
+
+		openSettings: () =>
+			dispatch({
+				type: DispatchCommands.OPEN_SETTINGS,
 			}),
 	};
 }

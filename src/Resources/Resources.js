@@ -37,6 +37,7 @@ import devices from "./Icons/devices.png";
 import devices2 from "./Icons/devices2.png";
 import settings from "./Icons/settings.png";
 import settings2 from "./Icons/settings2.png";
+import note1 from "./Icons/note1.png";
 import settings_animated from "./Icons/settings-animated.gif";
 import menu from "./Icons/menu.png";
 import CloseIcon from "@material-ui/icons/Close";
@@ -51,6 +52,8 @@ import editImage from "./Icons/edit-image.png";
 import videoType from "./Icons/video-type.png";
 import gridview from "./Icons/gridview.png";
 import CloudOffIcon from "@material-ui/icons/CloudOff";
+import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
+import AddIcon from "@material-ui/icons/Add";
 
 import notification1 from "./Audio/notification1.mp3";
 
@@ -93,6 +96,7 @@ export {
 	phone,
 	settings,
 	settings2,
+	note1,
 	settings_animated,
 	CloseIcon,
 	MenuIcon,
@@ -107,4 +111,6 @@ export {
 	videoType,
 	CloudOffIcon,
 	notification1,
+	DoubleArrowIcon,
+	AddIcon,
 };

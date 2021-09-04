@@ -32,18 +32,14 @@ export default function FileOptionsMenu({ isOpen, menuItemPressed }) {
 				: "close-menu-animation 0.5s forwards"
 		}`;
 
-		setTimeout(
-			() => {
-				Array.from(menu.childNodes).map((each) => {
-					each.style.display = `${isOpen ? "flex" : "none"}`;
-				});
-			},
-			isOpen ? 400 : 0
-		);
+		if (!isOpen) {
+			Array.from(menu.childNodes).map(
+				(each) =>
+					(each.style.animation = "file-menu-inner-animation 0.1s forwards")
+			);
+		}
 
-		setTimeout(() => {
-			menu.style.display = `${isOpen ? "flex" : "none"}`;
-		}, 350);
+		setTimeout(() => (menu.style.display = `${isOpen ? "flex" : "none"}`), 400);
 	}, [isOpen]);
 
 	return (

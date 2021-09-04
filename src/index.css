@@ -18,6 +18,7 @@
 	--text-editor-index: 400;
 	--file-options-index: 500;
 	--viewer-index: 800;
+	--settings-index: 800;
 	--menubar-index: 1000;
 }
 
@@ -94,9 +95,9 @@ input {
 	padding-right: 10px;
 }
 
-::-webkit-scrollbar {
+/* ::-webkit-scrollbar {
 	display: none;
-}
+} */
 
 /* .glass {
 
@@ -129,6 +130,32 @@ input {
 
 .hideScroll::-webkit-scrollbar {
 	display: none;
+}
+
+/* .scrollStyle1::-webkit-scrollbar {
+	width: 10px;
+}
+.scrollStyle1::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+.scrollStyle1::-webkit-scrollbar-thumb {
+	background: #888;
+}
+.scrollStyle1::-webkit-scrollbar-thumb:hover {
+	background: #555;
+} */
+
+::-webkit-scrollbar {
+	width: 10px;
+}
+::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+	background: #888;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #555;
 }
 
 .bounce-on-click {

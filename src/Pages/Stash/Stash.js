@@ -16,11 +16,11 @@ function Stash({ stashDb }) {
 
 			<div className="date-stamp">{date.toString()}</div>
 
-			<div className="archive-column">
+			<div className="archive-column hideScroll scrollStyle1">
 				{Object.keys(stashDb).map((key, _) => (
 					<File
 						key={key}
-						fileState={stashDb[key].fileState}
+						FileStates={stashDb[key].FileStates}
 						name={stashDb[key].name}
 						type={stashDb[key].type}
 						link={stashDb[key].link}

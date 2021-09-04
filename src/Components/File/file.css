@@ -17,9 +17,10 @@
 	height: 100%;
 	width: 100%;
 	object-fit: cover;
+	animation: file-inner-child-animation 2s forwards;
 }
 
-.file-inner {
+.file-video {
 	animation: file-inner-child-animation 5s forwards;
 }
 
@@ -205,10 +206,10 @@
 
 @keyframes file-inner-child-animation {
 	from {
-		display: none !important;
+		opacity: 0;
 	}
 
 	to {
-		display: block !important;
+		opacity: 1;
 	}
 }

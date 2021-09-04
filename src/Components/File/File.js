@@ -6,8 +6,8 @@ import VideoThumbnail from "react-video-thumbnail";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import { connect } from "react-redux";
 import {
-	HomeViewType,
-	FileState,
+	HomeViewTypes,
+	FileStates,
 	DispatchCommands,
 	ColorWheel,
 } from "../../Global/Globals";
@@ -51,7 +51,7 @@ function File({
 
 	const _x = {
 		file: {
-			...(homeViewType === HomeViewType.GRID
+			...(homeViewType === HomeViewTypes.GRID
 				? {
 						position: "relative",
 						marginRight: 20,
@@ -78,7 +78,7 @@ function File({
 
 		file_type: {
 			background:
-				fileState === FileState.STASHED ? "tomato" : "var(--dark-glass)",
+				fileState === FileStates.STASHED ? "tomato" : "var(--dark-glass)",
 			color: "white",
 		},
 
@@ -98,7 +98,7 @@ function File({
 			zIndex: "var(--file-loader-index)",
 			top: -8,
 			left: -8,
-			// color: "blue",
+			color: !progress ? "tomato" : "blue",
 		},
 	};
 
@@ -109,7 +109,7 @@ function File({
 			file.addEventListener("contextmenu", (event) => {
 				event.preventDefault();
 				event.stopPropagation();
-				if (fileState !== FileState.STASHED) openFileMenu?.(file, type);
+				if (fileState !== FileStates.STASHED) openFileMenu?.(file, type);
 			});
 		});
 	}, []);
@@ -129,24 +129,14 @@ function File({
 	}, []);
 
 	useEffect(() => {
-		if (fileState === FileState.STAGED) {
+		if (fileState === FileStates.STAGED) {
 			const file_body = document.getElementById(id);
 
 			if (file_body) {
-				homeViewType === HomeViewType.ROAM
+				homeViewType === HomeViewTypes.ROAM
 					? (file_body.style.animation = `${`file-in-animation${boxtypes[type]["anim"]} 1.0s forwards`}`)
 					: (file_body.style.animation = `${`file-in-animation-grid 1.0s forwards`}`);
 			}
-
-			// console.log(file_body.childNodes);
-
-			// file_body.childNodes[2].style.animation = `${`file-inner-child-animation 3.0s forwards`}`;
-
-			// Array.from(file_body.childNodes).map((e) => {
-			// 	if (e.className === "file-image" || e.className === "file-video") {
-			// 		e.style.animation = `${`file-inner-child-animation 3.0s forwards`}`;
-			// 	}
-			// });
 		}
 	}, []);
 
@@ -158,9 +148,7 @@ function File({
 	function resolveFilePreview() {
 		switch (type) {
 			case "image":
-				return (
-					<img className="file-image file-inner" src={preview} alt={type} />
-				);
+				return <img className="file-image" src={preview} alt={type} />;
 
 			case "video":
 				let thumb_height = 90;
@@ -168,7 +156,7 @@ function File({
 
 				return (
 					<div
-						className="file-inner"
+						className="file-video"
 						style={{
 							height: 90,
 							width: 170,
@@ -176,9 +164,9 @@ function File({
 							background: "black",
 							display: "grid",
 							gridTemplateColumns: "1fr 1fr",
-							animation:
-								homeViewType === HomeViewType.ROAM &&
-								"file-in-animation-video-inner 1.0s forwards",
+							// animation:
+							// 	homeViewType === HomeViewTypes.ROAM &&
+							// 	"file-in-animation-video-inner 1.0s forwards",
 						}}
 					>
 						{/* <div style={{ width: thumb_width, height: thumb_height }}>
@@ -254,7 +242,7 @@ function File({
 				className="file"
 				style={{
 					..._x.file,
-					...(fileState === FileState.STASHED ? _x.archiveVariant : null),
+					...(fileState === FileStates.STASHED ? _x.archiveVariant : null),
 				}}
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
@@ -263,14 +251,12 @@ function File({
 					openFile(preview, type);
 				}}
 			>
-				{progress !== 100 && (
-					<CircularProgress
-						style={_x.progress}
-						size={25}
-						variant="determinate"
-						value={progress}
-					/>
-				)}
+				<CircularProgress
+					style={_x.progress}
+					size={25}
+					variant="determinate"
+					value={progress}
+				/>
 
 				{resolveIndicator()}
 
@@ -278,7 +264,7 @@ function File({
 
 				{isExternal && <img className="user-indicator" src={ownerDp} />}
 
-				{showdraghandle && homeViewType === HomeViewType.ROAM && (
+				{showdraghandle && homeViewType === HomeViewTypes.ROAM && (
 					<div className="file-drag-handle">
 						<DragIndicatorIcon style={{ color: "white", fontSize: 10 }} />
 					</div>

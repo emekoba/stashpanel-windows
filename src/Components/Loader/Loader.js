@@ -11,13 +11,7 @@ import { useEffect } from "react";
 import "./loader.css";
 import { CloudOffIcon } from "../../Resources/Resources";
 import { connect } from "react-redux";
-
-export const LoaderState = {
-	LOADING: "LOADING",
-	SUCCESS: "SUCCESS",
-	FAILURE: "FAILURE",
-	OFFLINE: "OFFLINE",
-};
+import { LoaderStates } from "../../Global/Globals";
 
 function Loader({ isLoading, currentLoaderState, size, type, loaderStyles }) {
 	const _loader_type = "pulse";
@@ -64,7 +58,7 @@ function Loader({ isLoading, currentLoaderState, size, type, loaderStyles }) {
 	function getLoader() {
 		let _loader_comp;
 
-		if (currentLoaderState === LoaderState.OFFLINE) {
+		if (currentLoaderState === LoaderStates.OFFLINE) {
 			_loader_comp = (
 				<CloudOffIcon
 					style={{

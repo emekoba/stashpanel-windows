@@ -36,19 +36,32 @@ export const ColorWheel = [
 	"goldenrod",
 ];
 
-export const HomeViewType = {
+export const LoaderStates = {
+	LOADING: "LOADING",
+	SUCCESS: "SUCCESS",
+	FAILURE: "FAILURE",
+	OFFLINE: "OFFLINE",
+};
+
+export const HomeViewTypes = {
 	GRID: "GRID",
 	ROAM: "ROAM",
 };
 
-export const FileState = {
+export const FileStates = {
 	DROPPED: "DROPPED",
 	STAGED: "STAGED",
 	STASHED: "STASHED",
 };
 
-export const NotificationType = {
+export const NotificationTypes = {
 	NEW_FILE: "NEW_FILE",
+};
+
+export const CollectionTypes = {
+	ACTIVE: "ACTIVE",
+	MEMBER: "MEMBER",
+	OWNED: "OWNED",
 };
 
 export const DispatchCommands = {
@@ -62,6 +75,8 @@ export const DispatchCommands = {
 	TOGGLE_NETWORK_STATUS: "TOGGLE_NETWORK_STATUS",
 	REMOVE_FILE_FROM_STASH: "REMOVE_FILE_FROM_STASH",
 	UPDATE_SETTINGS: "UPDATE_SETTINGS",
+	OPEN_SETTINGS: "OPEN_SETTINGS",
+	CLOSE_SETTINGS: "CLOSE_SETTINGS",
 	UPDATE_USER_DP: "UPDATE_USER_DP",
 	ADD_COLLECTION_BANNER: "ADD_COLLECTION_BANNER",
 	HIDE_WINDOW_MENU: "HIDE_WINDOW_MENU",
@@ -70,6 +85,10 @@ export const DispatchCommands = {
 	CLOSE_FILE: "CLOSE_FILE",
 	OPEN_FILE: "OPEN_FILE",
 	PLAY_ALERT: "PLAY_ALERT",
+	UPDATE_FILE_PROGRESS: "UPDATE_FILE_PROGRESS",
+	UPDATE_COLLECTION: "UPDATE_COLLECTION",
+	UPDATE_ACTIVE_COLLECTION: "UPDATE_ACTIVE_COLLECTION",
+	UPDATE_MEMBER_COLLECTIONS: "UPDATE_MEMBER_COLLECTIONS",
 };
 
 export function generateId(length) {

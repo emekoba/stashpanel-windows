@@ -29,15 +29,13 @@ import {
 	bg21,
 } from "../../Resources/Resources";
 import Stash from "../Stash/Stash";
-import Viewer from "../Viewer/Viewer";
 import FileOptionsMenu from "../../Components/FileOptionsMenu/FileOptionsMenu";
 import TextEditor from "../TextEditor/TextEditor";
-import Settings from "../Settings/Settings";
 import { connect } from "react-redux";
 import {
 	DispatchCommands,
-	HomeViewType,
-	FileState,
+	HomeViewTypes,
+	FileStates,
 } from "../../Global/Globals";
 
 function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
@@ -116,7 +114,7 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 		// 	file.addEventListener("contextmenu", (event) => {
 		// 		event.preventDefault();
 		// 		event.stopPropagation();
-		// 		if (fileState !== FileState.STASHED) openFileMenu?.(file, type);
+		// 		if (FileStates !== FileStates.STASHED) openFileMenu?.(file, type);
 		// 	});
 		// });
 	}, []);
@@ -255,7 +253,7 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 			// 	.addEventListener("contextmenu", (event) => {
 			// 		event.preventDefault();
 			// 		event.stopPropagation();
-			// 		if (homeDb[key]?.fileState !== FileState.STASHED)
+			// 		if (homeDb[key]?.FileStates !== FileStates.STASHED)
 			// 			openFileMenu(homeDb[key]?.file, homeDb[key]?.type);
 			// 	});
 
@@ -275,7 +273,7 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 					progress={homeDb[key]?.progress}
 					openFileMenu={openFileMenu}
 					isExternal={homeDb[key]?.isExternal}
-					fileState={homeDb[key]?.fileState}
+					fileState={homeDb[key]?.FileStates.STAGED}
 					ownerDp={homeDb[key]?.ownerDp}
 				/>
 			);
@@ -285,9 +283,7 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 	}
 
 	return (
-		<div className="home-superior">
-			{showsettings && <Settings />}
-
+		<div className="home-superior hideScroll">
 			<UploadPanel>
 				<Tilt
 					tiltEnable={tilting}
@@ -301,7 +297,7 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 
 						{/* <img style={{ height: "100vh" }} src={bg8} className="home-bg" /> */}
 
-						{homeViewDb === HomeViewType.ROAM ? (
+						{homeViewDb === HomeViewTypes.ROAM ? (
 							<>{getFiles()}</>
 						) : (
 							<div className="home-grid">{getFiles()}</div>

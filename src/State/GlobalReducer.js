@@ -1,13 +1,16 @@
-import { LoaderState } from "../Components/Loader/Loader";
-import { isObject, DispatchCommands, HomeViewType } from "../Global/Globals";
+import {
+	isObject,
+	DispatchCommands,
+	HomeViewTypes,
+	CollectionTypes,
+	LoaderStates,
+} from "../Global/Globals";
 import { bg3, notification1 } from "../Resources/Resources";
 
 export const stashPanelGlobalState = {
 	userDp: "",
 
-	collectionBanner: "",
-
-	panelOnline: false,
+	panelOnline: true,
 
 	windowMenuVisible: true,
 
@@ -15,9 +18,13 @@ export const stashPanelGlobalState = {
 
 	deviceId: "fukvUJHvPZ3KfGRNlvUd",
 
-	collectionId: "eQFU59ZiUm2bNViUU29Q",
+	collections: {
+		active: { id: "", name: "", banner: "", creator: "", members: "" },
+		member: [],
+		owned: [],
+	},
 
-	homeView: HomeViewType.ROAM,
+	homeView: HomeViewTypes.ROAM,
 
 	fileViewerData: { isOpen: false, file: "", type: "" },
 
@@ -37,14 +44,16 @@ export const stashPanelGlobalState = {
 
 	loader: {
 		isLoading: false,
-		loaderState: LoaderState.LOADING,
+		loaderState: LoaderStates.LOADING,
 	},
 
 	popup: {
 		isOpen: true,
 	},
 
-	settings: {},
+	settings: {
+		isOpen: false,
+	},
 };
 
 function playAudioNotification(type) {
@@ -61,7 +70,7 @@ function globalReducer(state = stashPanelGlobalState, action) {
 				loader: {
 					...state.loader,
 					isLoading: true,
-					loaderState: action.payload ?? LoaderState.LOADING,
+					loaderState: action.payload ?? LoaderStates.LOADING,
 				},
 			};
 			break;
@@ -121,6 +130,14 @@ function globalReducer(state = stashPanelGlobalState, action) {
 			return { ...state, panelOnline: action.payload };
 			break;
 
+		case DispatchCommands.OPEN_SETTINGS:
+			return { ...state, settings: { ...state.settings, isOpen: true } };
+			break;
+
+		case DispatchCommands.CLOSE_SETTINGS:
+			return { ...state, settings: { ...state.settings, isOpen: false } };
+			break;
+
 		case DispatchCommands.UPDATE_SETTINGS:
 			return { ...state, settings: { ...state.settings, ...action.payload } };
 			break;
@@ -145,9 +162,9 @@ function globalReducer(state = stashPanelGlobalState, action) {
 			return {
 				...state,
 				homeView:
-					state.homeView === HomeViewType.GRID
-						? HomeViewType.ROAM
-						: HomeViewType.GRID,
+					state.homeView === HomeViewTypes.GRID
+						? HomeViewTypes.ROAM
+						: HomeViewTypes.GRID,
 			};
 			break;
 
@@ -173,6 +190,54 @@ function globalReducer(state = stashPanelGlobalState, action) {
 		case DispatchCommands.PLAY_ALERT:
 			playAudioNotification(action.payload);
 			return state;
+			break;
+
+		case DispatchCommands.UPDATE_FILE_PROGRESS:
+			return {
+				...state,
+				stage: {
+					...state.stage,
+					[`${action.fileId}`]: {
+						...state.stage[action.fileId],
+						progress: action.progress,
+					},
+				},
+			};
+			break;
+
+		case DispatchCommands.UPDATE_ACTIVE_COLLECTION:
+			return {
+				...state,
+				activeCollection: { ...state.activeCollection, ...action.payload },
+			};
+			break;
+
+		case DispatchCommands.UPDATE_MEMBER_COLLECTIONS:
+			return {
+				...state,
+				memberCollection: action.payload,
+			};
+			break;
+
+		case DispatchCommands.UPDATE_COLLECTION:
+			return {
+				...state,
+				collections: {
+					...state.collections,
+					active:
+						action.collectionType === CollectionTypes.ACTIVE
+							? { ...state.collections.active, ...action.payload }
+							: state.collections.active,
+					member:
+						action.collectionType === CollectionTypes.MEMBER
+							? [...state.collections.member, ...action.payload]
+							: state.collections.member,
+					owned:
+						action.collectionType === CollectionTypes.OWNED
+							? [...state.collections.owned, ...action.payload]
+							: state.collections.owned,
+				},
+			};
 			break;
 
 		default:

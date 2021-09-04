@@ -77,11 +77,6 @@ function mapDispatchToProps(dispatch) {
 			dispatch({
 				type: DispatchCommands.SHOW_WINDOW_MENU,
 			}),
-
-		showWindowMenu: () =>
-			dispatch({
-				type: DispatchCommands.SHOW_WINDOW_MENU,
-			}),
 	};
 }
 

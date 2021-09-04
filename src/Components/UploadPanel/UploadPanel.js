@@ -1,16 +1,17 @@
 import React from "react";
 import { FileDrop } from "react-file-drop";
 import { connect } from "react-redux";
-import { generateId, DispatchCommands, FileState } from "../../Global/Globals";
+import { generateId, DispatchCommands, FileStates } from "../../Global/Globals";
 import { storage, addFileToDb } from "../../Services/firebase.service";
 
 function UploadPanel({
 	userId,
 	deviceId,
-	collectionId,
+	activeCollectionId,
 	children,
 	addFilesToStage,
 	settings,
+	updateFileUploadProgress,
 }) {
 	function getFileSize(size) {
 		if (size === 0) return "0 Bytes";
@@ -38,13 +39,13 @@ function UploadPanel({
 		return true;
 	}
 
-	function updateDB() {}
-
 	function getRefinedType(type) {
 		return type?.toString()?.split("/")[0];
 	}
 
-	function uploadFile(file, filetype, name, x, y) {
+	function uploadFile(file, filetype, fileId, name, x, y) {
+		if (!deviceId) deviceId = "unknown device";
+
 		const storageRef = storage
 			.ref()
 			.child(`${userId}/${deviceId}/${filetype ?? "misc"}/${name}`)
@@ -60,10 +61,7 @@ function UploadPanel({
 
 				console.log(progress + "% done");
 
-				// setpins({
-				// 	...pins,
-				// 	[`${name}`]: { ...pins[name], progress: progress },
-				// });
+				updateFileUploadProgress(fileId, progress);
 			},
 			(error) => {
 				throw error;
@@ -71,10 +69,11 @@ function UploadPanel({
 			() => {
 				storageRef.snapshot.ref.getDownloadURL().then((url) => {
 					addFileToDb(
-						collectionId,
+						activeCollectionId,
 						deviceId,
+						fileId,
 						file.name,
-						getRefinedType(file.type),
+						getRefinedType(name, file.type),
 						url,
 						x,
 						y
@@ -89,8 +88,10 @@ function UploadPanel({
 	}
 
 	function onDrop(file, e) {
+		const _fileId = generateId();
+
 		addFilesToStage({
-			[`${file[0].name}`]: {
+			[`${_fileId}`]: {
 				id: generateId(),
 				x: e.clientX,
 				y: e.clientY,
@@ -100,7 +101,7 @@ function UploadPanel({
 				type: file[0].type ? getRefinedType(file[0].type) : "image",
 				file: file[0],
 				progress: 0,
-				fileState: FileState.DROPPED,
+				FileStates: FileStates.DROPPED,
 			},
 		});
 
@@ -109,6 +110,7 @@ function UploadPanel({
 				uploadFile(
 					file[0],
 					getRefinedType(file[0].type),
+					_fileId,
 					file[0].name,
 					e.clientX,
 					e.clientY
@@ -128,7 +130,7 @@ function mapStateToProps(state) {
 	return {
 		userId: state.userId,
 		devieId: state.deviceId,
-		collectionId: state.collectionId,
+		activeCollectionId: state.collections.active.id,
 		panelOnline: state.panelOnline,
 		settings: state.settings,
 	};
@@ -140,6 +142,13 @@ function mapDispatchToProps(dispatch) {
 			dispatch({
 				type: DispatchCommands.ADD_FILES_TO_STAGE,
 				payload: files,
+			}),
+
+		updateFileUploadProgress: (fileId, progress) =>
+			dispatch({
+				type: DispatchCommands.UPDATE_FILE_PROGRESS,
+				fileId,
+				progress,
 			}),
 	};
 }
