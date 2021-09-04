@@ -40,7 +40,7 @@ export default function Onboarding() {
 	function goToLogin() {}
 
 	return (
-		<div className="onboarding">
+		<div className="onboarding hideScroll">
 			{!onboarding.route === "splash" ? <Splash /> : <>{getRoute()}</>}
 		</div>
 	);

@@ -22,8 +22,10 @@
 	top: 0px;
 	display: flex;
 	flex-wrap: wrap;
-	padding: 80px 20px 20px 20px;
+	padding: 80px 20px;
+	padding-bottom: 0px;
 	overflow-y: scroll;
+	z-index: var(--home-grid-index);
 }
 
 .home-bg {

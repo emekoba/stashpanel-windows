@@ -24,7 +24,7 @@ export default function Login({ goToRegister }) {
 	}
 
 	return (
-		<div className="login">
+		<div className="login hideScroll">
 			<div className="left-side"></div>
 
 			<div className="right-side">

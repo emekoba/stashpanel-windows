@@ -37,7 +37,7 @@ function StashPanel({
 	settingsOpen,
 	updateCollection,
 }) {
-	const [isLoggedIn, setIsLoggedIn] = useState(true);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	const [firstDraw, setFirstDraw] = useState(true);
 
@@ -295,7 +295,7 @@ function StashPanel({
 											name: _file_data?.["name"],
 											progress: 0,
 											isExternal: options?.isExternal,
-											FileStates: FileStates.STAGED,
+											fileState: FileStates.STAGED,
 											ownerDp: options?.isExternal && resolveDp(eachFile.id),
 										},
 									};
@@ -314,7 +314,7 @@ function StashPanel({
 											name: _file_data?.["name"],
 											progress: 0,
 											isExternal: options?.isExternal,
-											FileStates: FileStates.STASHED,
+											fileState: FileStates.STASHED,
 										},
 									};
 								}
@@ -331,7 +331,7 @@ function StashPanel({
 							name: _file_data?.["name"],
 							progress: 0,
 							isExternal: options?.isExternal,
-							FileStates: FileStates.STAGED,
+							fileState: FileStates.STAGED,
 							ownerDp: options?.isExternal && resolveDp(eachFile.id),
 						};
 					}

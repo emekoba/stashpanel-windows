@@ -124,92 +124,31 @@
 	}
 }
 
-@keyframes file-in-animation-image {
-	from {
-		height: 0px;
-		width: 0px;
-	}
-
-	to {
-		height: 100px;
-		width: 100px;
-	}
-}
-
-@keyframes file-out-animation-image {
-	from {
-		height: 100px;
-		width: 100px;
-	}
-
-	to {
-		height: 0px;
-		width: 0px;
-	}
-}
-
-@keyframes file-in-animation-grid {
-	from {
-		height: 0px;
-	}
-
-	to {
-		height: 100px;
-	}
-}
-
-@keyframes file-out-animation-grid {
-	from {
-		height: 100px;
-	}
-
-	to {
-		height: 0px;
-	}
-}
-
-@keyframes file-in-animation-video {
-	from {
-		height: 0px;
-		width: 0px;
-	}
-
-	to {
-		height: 100px;
-		width: 180px;
-	}
-}
-
-@keyframes file-in-animation-video-inner {
-	from {
-		height: 0px;
-		width: 0px;
-	}
-
-	to {
-		height: 90px;
-		width: 170px;
-	}
-}
-
-@keyframes file-out-animation-video {
-	from {
-		height: 100px;
-		width: 180px;
-	}
-
-	to {
-		height: 0px;
-		width: 0px;
-	}
-}
-
-@keyframes file-inner-child-animation {
+@keyframes file-slide-in-animation {
 	from {
 		opacity: 0;
+		transform: translateX(-20px);
 	}
 
 	to {
 		opacity: 1;
+		transform: translateX(0px);
+	}
+}
+
+@keyframes file-bounce-in-animation {
+	0% {
+		opacity: 0;
+		transform: scale(0.3);
+	}
+	50% {
+		opacity: 1;
+		transform: scale(1.05);
+	}
+	70% {
+		transform: scale(0.9);
+	}
+	100% {
+		transform: scale(1);
 	}
 }

@@ -60,6 +60,8 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 
 	const [firstReorder, setFirstReorder] = useState(true);
 
+	const [homeGridOverflown, sethomeGridOverflown] = useState(false);
+
 	const slideControl = createRef();
 
 	useEffect(() => {
@@ -118,6 +120,30 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 		// 	});
 		// });
 	}, []);
+
+	useEffect(() => {
+		if (homeViewDb === HomeViewTypes.GRID) {
+			window.addEventListener("resize", mitigateOverflow);
+		} else {
+			// window.addEventListener("resize", () => {
+			// 	console.log("added listener");
+			// 	readjustFilePosition(homeDb);
+			// });
+		}
+	});
+	useEffect(() => {
+		return () => window.removeEventListener("resize", mitigateOverflow);
+	}, []);
+
+	function mitigateOverflow() {
+		const element = document.getElementById("home-grid");
+
+		const isOverflowing =
+			element?.scrollHeight > element?.clientHeight ||
+			element?.scrollWidth > element?.clientWidth;
+
+		sethomeGridOverflown(isOverflowing);
+	}
 
 	// window.addEventListener("resize", () => readjustFilePosition(homeDb));
 
@@ -246,17 +272,23 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 		// window.removeEventListener("resize", () => readjustFilePosition(homeDb));
 	}
 
+	function isOverflown(el_Id) {
+		const el = document.getElementById(el_Id);
+
+		const curOverf = el.style.overflow;
+
+		if (!curOverf || curOverf === "visible") el.style.overflow = "hidden";
+
+		const isOverflowing =
+			el.clientWidth < el.scrollWidth || el.clientHeight < el.scrollHeight;
+
+		el.style.overflow = curOverf;
+
+		return isOverflowing;
+	}
+
 	function getFiles() {
 		const _all_files = Object.keys(homeDb).map((key, _) => {
-			// document
-			// 	.getElementById(homeDb[key]?.id)
-			// 	.addEventListener("contextmenu", (event) => {
-			// 		event.preventDefault();
-			// 		event.stopPropagation();
-			// 		if (homeDb[key]?.FileStates !== FileStates.STASHED)
-			// 			openFileMenu(homeDb[key]?.file, homeDb[key]?.type);
-			// 	});
-
 			return (
 				<File
 					id={homeDb[key]?.id}
@@ -273,7 +305,7 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 					progress={homeDb[key]?.progress}
 					openFileMenu={openFileMenu}
 					isExternal={homeDb[key]?.isExternal}
-					fileState={homeDb[key]?.FileStates.STAGED}
+					fileState={homeDb[key]?.fileState}
 					ownerDp={homeDb[key]?.ownerDp}
 				/>
 			);
@@ -300,7 +332,12 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 						{homeViewDb === HomeViewTypes.ROAM ? (
 							<>{getFiles()}</>
 						) : (
-							<div className="home-grid">{getFiles()}</div>
+							<div
+								id="home-grid"
+								className={`home-grid ${!homeGridOverflown && "hideScroll"}`}
+							>
+								{getFiles()}
+							</div>
 						)}
 
 						{homemenu.isOpen && (

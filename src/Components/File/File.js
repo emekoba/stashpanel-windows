@@ -129,16 +129,17 @@ function File({
 	}, []);
 
 	useEffect(() => {
-		if (fileState === FileStates.STAGED) {
-			const file_body = document.getElementById(id);
+		const file_body = document.getElementById(id);
 
-			if (file_body) {
-				homeViewType === HomeViewTypes.ROAM
-					? (file_body.style.animation = `${`file-in-animation${boxtypes[type]["anim"]} 1.0s forwards`}`)
-					: (file_body.style.animation = `${`file-in-animation-grid 1.0s forwards`}`);
-			}
+		const _rand = Math.random() * 2;
+
+		if (file_body) {
+			if (homeViewType === HomeViewTypes.GRID)
+				file_body.style.animation = `file-slide-in-animation ${_rand}s forwards`;
+			else if (fileState === FileStates.STAGED)
+				file_body.style.animation = `file-bounce-in-animation ${_rand}s forwards`;
 		}
-	}, []);
+	}, [homeViewType]);
 
 	useEffect(
 		() => setcoordinates({ ...coordinates, posX: posX, posY: posY }),
@@ -164,9 +165,6 @@ function File({
 							background: "black",
 							display: "grid",
 							gridTemplateColumns: "1fr 1fr",
-							// animation:
-							// 	homeViewType === HomeViewTypes.ROAM &&
-							// 	"file-in-animation-video-inner 1.0s forwards",
 						}}
 					>
 						{/* <div style={{ width: thumb_width, height: thumb_height }}>
