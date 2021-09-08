@@ -2,6 +2,7 @@
 
 <div style="text-align:center">
   <img alt="stashpanel logo" src=".\src\Resources\AppPreview\app.png"/>
+
 </div>
 
 <!-- ![stashpanel logo](./src/Resources/AppPreview/app.png) -->
