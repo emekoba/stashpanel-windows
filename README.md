@@ -1,70 +1,48 @@
-# Getting Started with Create React App
+# Stash Panel
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<div style="text-align:center">
+  <img alt="stashpanel logo" src="./src/Resources/AppPreview/app.png"/>
+</div>
 
-## Available Scripts
+<!-- ![stashpanel logo](./src/Resources/AppPreview/app.png) -->
 
-In the project directory, you can run:
+<br/>
 
-### `yarn start`
+## Stash Panel is a simple file sharing solution built to make the act of sharing images/videos/documents/audio etc as intuitive and seamless as possible. Just load up the windows application, register and create a new collection or join other panel collections and thats it!
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<br/>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## If you want to share a file just **Drag** it from an open window and **Drop** it on your **Panel**s **Staging** area and it will pop up on all other panels in the collection.
 
-### `yarn test`
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<div style="display:flex">
+  <div style="background:#BE3A39; display:flex;place-items:center; border-radius:6px; margin-right:30px; cursor:pointer;">
+  
+  <div style="background:white; border-top-left-radius:6px; border-bottom-left-radius:6px;">
 
-### `yarn build`
+  <img alt="stashpanel logo" style="width:30px; padding:0px 5px; border-top-left-radius:6px; border-bottom-left-radius:6px;" src="./src/Resources/Icons/windows-icon.png"/>
+  </div>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  <div style="color:white; padding:2px 20px;">windows</div>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  </div>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+  <div style="background:#BE3A39; display:flex;place-items:center; border-radius:6px; margin-right:30px; cursor:pointer;">
+  
+  <div style="background:white; border-top-left-radius:6px; border-bottom-left-radius:6px;">
 
-### `yarn eject`
+  <img alt="stashpanel logo" style="width:30px; padding:0px 5px; border-top-left-radius:6px; border-bottom-left-radius:6px;" src="./src/Resources/Icons/android-icon.png"/>
+  </div>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+  <div style="color:white; padding:2px 20px;">android</div>
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+  </div>
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+</div>

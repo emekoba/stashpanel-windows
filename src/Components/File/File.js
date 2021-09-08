@@ -51,10 +51,11 @@ function File({
 
 	const _x = {
 		file: {
-			...(homeViewType === HomeViewTypes.GRID
+			...(homeViewType === HomeViewTypes.GRID ||
+			fileState === FileStates.STASHED
 				? {
 						position: "relative",
-						marginRight: 20,
+						marginRight: fileState === FileStates.STASHED ? 10 : 20,
 						marginBottom: 20,
 				  }
 				: {

@@ -19,12 +19,19 @@ function Stash({ stashDb }) {
 			<div className="archive-column hideScroll scrollStyle1">
 				{Object.keys(stashDb).map((key, _) => (
 					<File
-						key={key}
-						FileStates={stashDb[key].FileStates}
-						name={stashDb[key].name}
-						type={stashDb[key].type}
-						link={stashDb[key].link}
-						date={stashDb[key].date}
+						id={stashDb[key]?.id}
+						key={stashDb[key]?.name}
+						name={stashDb[key]?.name}
+						date={stashDb[key]?.date}
+						type={stashDb[key]?.type}
+						posX={stashDb[key]?.x}
+						posY={stashDb[key]?.y}
+						file={stashDb[key]?.file}
+						link={stashDb[key]?.link}
+						path={stashDb[key]?.path}
+						isExternal={stashDb[key]?.isExternal}
+						fileState={stashDb[key]?.fileState}
+						ownerDp={stashDb[key]?.ownerDp}
 					/>
 				))}
 			</div>
@@ -44,3 +51,6 @@ function mapStateToProps(state) {
 }
 
 export default connect(mapStateToProps)(Stash);
+
+//? save on stash means that it will save the file locally when stashed but it must check first
+//? for whether the file exists is that folder.
