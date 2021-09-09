@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import "./file.css";
 import { CircularProgress, Tooltip } from "@material-ui/core";
-import { imageType, videoType, codeType } from "../../Resources/Resources";
+import {
+	imageType,
+	videoType,
+	codeType,
+	pdfType,
+} from "../../Resources/Resources";
 import VideoThumbnail from "react-video-thumbnail";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import { connect } from "react-redux";
@@ -39,15 +44,35 @@ function File({
 		diffY: 90,
 	});
 
-	const [boxtypes] = useState({
+	const [boxtypes, setboxtypes] = useState({
 		video: { height: 100, width: 180, anim: "-video" },
-		photo: { height: 100, width: 100, anim: "-image" },
-		image: { height: 100, width: 100, anim: "-image" },
+		photo: {
+			height: fileState === FileStates.STAGED ? "100%" : 100,
+			width: 100,
+			anim: "-image",
+		},
+		image: {
+			height: fileState === FileStates.STAGED ? "100%" : 100,
+			width: 100,
+			anim: "-image",
+		},
 	});
 
 	const [showdraghandle, setshowdraghandle] = useState(false);
 
 	const [preview, setpreview] = useState("");
+
+	const pdf_lines = [
+		...[...Array(4).keys()].map(() => (
+			<hr
+				style={{
+					border: `1px solid var(--dark-glass)`,
+					background: `var(--dark-glass)`,
+					height: Math.floor(Math.random() * 20),
+				}}
+			/>
+		)),
+	];
 
 	const _x = {
 		file: {
@@ -63,19 +88,22 @@ function File({
 						top: coordinates.posY - coordinates.diffY,
 						left: coordinates.posX - coordinates.diffX,
 				  }),
-
-			// top: coordinates.posY * 0.01 + "%",
-			// left: coordinates.posX * 0.112 + "%",
-
 			width: boxtypes[type]?.width ?? 100,
-			height: boxtypes[type]?.height ?? 100,
-			background: isExternal ? "var(--orange-glass)" : "var(--glass)",
+			borderRadius: 10,
 			// background: isExternal
 			// 	? ColorWheel[Math.floor(Math.random() * ColorWheel.length)]
 			// 	: "var(--glass)",
 		},
 
-		archiveVariant: { position: "relative", margin: 6, marginLeft: 10 },
+		file_inner_body: {
+			background: isExternal ? "var(--orange-glass)" : "var(--glass)",
+			padding: 5,
+			boxShadow: " 0 2px 5px rgba(41, 41, 41, 0.25)",
+			backdropFilter: "blur(5px)",
+			height: boxtypes[type]?.height ?? 100,
+		},
+
+		stashed_file: { position: "relative", margin: 6, marginLeft: 10 },
 
 		file_type: {
 			background:
@@ -104,6 +132,17 @@ function File({
 	};
 
 	useEffect(() => {
+		if (fileState === FileStates.DROPPED && homeViewType === HomeViewTypes.ROAM)
+			setTimeout(
+				() =>
+					setboxtypes({
+						...boxtypes,
+						image: { ...boxtypes.image, height: "100%" },
+						photo: { ...boxtypes.photo, height: "100%" },
+					}),
+				1500
+			);
+
 		const files = document.getElementsByClassName("file");
 
 		Array.from(files).forEach((file) => {
@@ -194,7 +233,6 @@ function File({
 				);
 
 			default:
-				return <img className="file-image" src={preview} alt={type} />;
 		}
 	}
 
@@ -210,10 +248,68 @@ function File({
 					<img className="file-type-indicator" src={videoType} alt={type} />
 				);
 
+			case "pdf":
+				return <img className="file-type-indicator" src={pdfType} alt={type} />;
+
 			default:
 				return (
 					<img className="file-type-indicator" src={imageType} alt={type} />
 				);
+		}
+	}
+
+	const file_guts = (
+		<>
+			<CircularProgress
+				style={_x.progress}
+				size={25}
+				variant="determinate"
+				value={progress}
+			/>
+
+			{resolveIndicator()}
+
+			{resolveFilePreview()}
+
+			{isExternal && <img className="user-indicator" src={ownerDp} />}
+
+			{showdraghandle && homeViewType === HomeViewTypes.ROAM && (
+				<div className="file-drag-handle">
+					<DragIndicatorIcon style={{ color: "white", fontSize: 10 }} />
+				</div>
+			)}
+		</>
+	);
+
+	function resolveFileInnerBody() {
+		switch (type) {
+			case "pdf":
+				return (
+					<div className="file-pdf">
+						{file_guts}
+
+						<div
+							className="file-pdf-leaf"
+							style={{
+								..._x.file_inner_body,
+								display: "flex",
+								alignItems: "center",
+								paddingTop: 50,
+							}}
+						>
+							{pdf_lines}
+						</div>
+
+						<div className="file-pdf-spine" />
+
+						<div className="file-pdf-leaf" style={_x.file_inner_body}>
+							{pdf_lines}
+						</div>
+					</div>
+				);
+
+			default:
+				return <div style={_x.file_inner_body}>{file_guts}</div>;
 		}
 	}
 
@@ -241,7 +337,7 @@ function File({
 				className="file"
 				style={{
 					..._x.file,
-					...(fileState === FileStates.STASHED ? _x.archiveVariant : null),
+					...(fileState === FileStates.STASHED ? _x.stashed_file : null),
 				}}
 				onMouseEnter={onMouseEnter}
 				onMouseLeave={onMouseLeave}
@@ -250,24 +346,7 @@ function File({
 					openFile(preview, type);
 				}}
 			>
-				<CircularProgress
-					style={_x.progress}
-					size={25}
-					variant="determinate"
-					value={progress}
-				/>
-
-				{resolveIndicator()}
-
-				{resolveFilePreview()}
-
-				{isExternal && <img className="user-indicator" src={ownerDp} />}
-
-				{showdraghandle && homeViewType === HomeViewTypes.ROAM && (
-					<div className="file-drag-handle">
-						<DragIndicatorIcon style={{ color: "white", fontSize: 10 }} />
-					</div>
-				)}
+				{resolveFileInnerBody()}
 			</div>
 		</Tooltip>
 	);

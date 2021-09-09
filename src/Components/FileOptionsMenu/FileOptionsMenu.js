@@ -5,10 +5,6 @@ import { Tooltip } from "@material-ui/core";
 
 export default function FileOptionsMenu({ isOpen, menuItemPressed }) {
 	const menuBtns = {
-		Delete: {
-			icon: delete_icon,
-		},
-
 		Stash: {
 			icon: stash,
 		},
@@ -21,10 +17,14 @@ export default function FileOptionsMenu({ isOpen, menuItemPressed }) {
 		UnStage: {
 			icon: stash,
 		},
+
+		Delete: {
+			icon: delete_icon,
+		},
 	};
 
 	useEffect(() => {
-		const menu = document.querySelector(".file-options-menu");
+		const menu = document.querySelector(".file-options-menu-main-body");
 
 		menu.style.animation = `${
 			isOpen
@@ -43,17 +43,22 @@ export default function FileOptionsMenu({ isOpen, menuItemPressed }) {
 	}, [isOpen]);
 
 	return (
-		<div className="file-options-menu" onClick={(e) => e.stopPropagation()}>
-			{Object.keys(menuBtns).map((key) => (
-				<Tooltip key={key} placement="left" title={<div>{key}</div>}>
-					<img
-						style={_x.menuItem}
-						src={menuBtns[key].icon}
-						onClick={() => menuItemPressed(key)}
-						alt={key}
-					/>
-				</Tooltip>
-			))}
+		<div
+			className="file-options-menu-cntr"
+			onClick={(e) => e.stopPropagation()}
+		>
+			<div className="file-options-menu-main-body">
+				{Object.keys(menuBtns).map((key) => (
+					<Tooltip key={key} placement="left" title={<div>{key}</div>}>
+						<img
+							style={_x.menuItem}
+							src={menuBtns[key].icon}
+							onClick={() => menuItemPressed(key)}
+							alt={key}
+						/>
+					</Tooltip>
+				))}
+			</div>
 		</div>
 	);
 }

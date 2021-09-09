@@ -1,11 +1,7 @@
 .file {
 	position: absolute;
-	box-shadow: 0 2px 5px rgba(41, 41, 41, 0.25);
 	cursor: pointer;
 	z-index: var(--file-index);
-	padding: 5px;
-	backdrop-filter: blur(5px);
-	background-color: var(--glass);
 	transition: left 0.5s linear;
 }
 
@@ -18,10 +14,31 @@
 	width: 100%;
 	object-fit: cover;
 	animation: file-inner-child-animation 2s forwards;
+	display: grid;
+	place-items: center;
 }
 
 .file-video {
 	animation: file-inner-child-animation 5s forwards;
+}
+
+.file-pdf {
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	align-items: center;
+	overflow-y: hidden;
+}
+
+.file-pdf-leaf {
+	height: 100px;
+	border-radius: 10px;
+	padding-bottom: 30px;
+}
+
+.file-pdf-spine {
+	height: 80%;
+	width: 5px;
+	background: var(--dark-glass);
 }
 
 .file-options {
@@ -88,6 +105,7 @@
 	bottom: -3px;
 	display: grid;
 	place-items: center;
+	z-index: var(--file-drag-handle-index);
 	/* display: none; */
 }
 

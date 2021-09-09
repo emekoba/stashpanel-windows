@@ -32,11 +32,8 @@ import Stash from "../Stash/Stash";
 import FileOptionsMenu from "../../Components/FileOptionsMenu/FileOptionsMenu";
 import TextEditor from "../TextEditor/TextEditor";
 import { connect } from "react-redux";
-import {
-	DispatchCommands,
-	HomeViewTypes,
-	FileStates,
-} from "../../Global/Globals";
+import { DispatchCommands, HomeViewTypes } from "../../Global/Globals";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 	const [tilting, settilting] = useState(false);
@@ -337,6 +334,11 @@ function Home({ homeDb, homeViewDb, addFilesToStage, removeFileFromStage }) {
 								className={`home-grid ${!homeGridOverflown && "hideScroll"}`}
 							>
 								{getFiles()}
+								{/* <ResponsiveMasonry
+									columnsCountBreakPoints={{ 50: 1, 150: 2, 200: 3 }}
+								>
+									<Masonry columnsCount={2}>{getFiles()}</Masonry>
+								</ResponsiveMasonry> */}
 							</div>
 						)}
 

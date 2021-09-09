@@ -1,4 +1,4 @@
-# Stash Panel
+# Stash Panel Windows
 
 <div style="text-align:center">
   <img alt="stashpanel logo" src=".\src\Resources\AppPreview\app.png"/>
@@ -9,7 +9,7 @@
 
 <br/>
 
-Stash Panel is a simple file sharing solution built to make the act of sharing images/videos/documents/audio etc as intuitive and seamless as possible. Just load up the windows application, register and create a new collection or join other panel collections and thats it!
+Stash Panel is a simple file sharing service built to make the act of sharing images/videos/documents/audio etc as intuitive and seamless as possible. Just load up the windows application, register and create a new collection or join other panel collections and thats it!
 
 <br/>
 

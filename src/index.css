@@ -7,6 +7,7 @@
 	--file-size: 100px;
 	--file-responsive-size: 21vw;
 
+	--file-drag-handle-index: 5;
 	--home-bg-index: -10;
 	--file-index: 10;
 	--file-loader-index: 10;

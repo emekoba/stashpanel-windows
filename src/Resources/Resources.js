@@ -48,6 +48,7 @@ import delete_icon from "./Icons/delete.png";
 import stash from "./Icons/stash.png";
 import imageType from "./Icons/image-type2.png";
 import codeType from "./Icons/code-type.png";
+import pdfType from "./Icons/pdf-type.png";
 import editImage from "./Icons/edit-image.png";
 import videoType from "./Icons/video-type.png";
 import gridview from "./Icons/gridview.png";
@@ -107,6 +108,7 @@ export {
 	gridview,
 	imageType,
 	codeType,
+	pdfType,
 	editImage,
 	videoType,
 	CloudOffIcon,

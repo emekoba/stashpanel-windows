@@ -1,28 +1,33 @@
-.file-options-menu {
+.file-options-menu-cntr {
 	position: absolute;
 	height: 100vh;
 	top: 0px;
 	right: 0px;
 	z-index: var(--file-options-menu-index);
 	display: flex;
+	align-items: center;
+}
+
+.file-options-menu-main-body {
+	display: flex;
 	flex-direction: column;
 	align-items: center;
 	background: var(--dark-glass);
 	padding: 10px;
 
-	display: none;
+	/* display: none; */
 }
 
 @keyframes open-menu-animation {
 	from {
-		width: 0vw;
+		width: 0px;
 		opacity: 0;
 		padding-left: 0px;
 		padding-right: 0px;
 	}
 
 	to {
-		width: 45px;
+		width: 100%;
 		opacity: 1;
 		padding-left: 10px;
 		padding-right: 10px;
@@ -31,14 +36,14 @@
 
 @keyframes close-menu-animation {
 	from {
-		width: 45px;
+		width: 100%;
 		opacity: 1;
 		padding-left: 10px;
 		padding-right: 10px;
 	}
 
 	to {
-		width: 0vw;
+		width: 0px;
 		opacity: 0;
 		padding-left: 0px;
 		padding-right: 0px;

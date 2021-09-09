@@ -32,6 +32,7 @@ function UploadPanel({
 			"image/png",
 			"image/gif",
 			"image/x-icon",
+			"application/pdf",
 		];
 
 		if (validTypes.indexOf(file.type) === -1) return false;
@@ -40,17 +41,28 @@ function UploadPanel({
 	}
 
 	function getRefinedType(type) {
-		return type?.toString()?.split("/")[0];
+		const _split = type?.toString()?.split("/");
+
+		switch (type) {
+			case "application/pdf":
+				return _split[1];
+				break;
+
+			default:
+				return _split[0];
+				break;
+		}
 	}
 
 	function uploadFile(file, filetype, fileId, name, x, y) {
+		console.log("%c uploading file", "color:limegreen");
+
 		if (!deviceId) deviceId = "unknown device";
 
 		const storageRef = storage
 			.ref()
 			.child(`${userId}/${deviceId}/${filetype ?? "misc"}/${name}`)
 			.put(file);
-
 		// .on("state_changed", (){});
 
 		storageRef.on(
@@ -59,7 +71,7 @@ function UploadPanel({
 				let progress =
 					Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 100;
 
-				console.log(progress + "% done");
+				console.log(`%c ${progress}% done`, "color:limegreen");
 
 				updateFileUploadProgress(fileId, progress);
 			},
@@ -67,18 +79,20 @@ function UploadPanel({
 				throw error;
 			},
 			() => {
-				storageRef.snapshot.ref.getDownloadURL().then((url) => {
-					addFileToDb(
-						activeCollectionId,
-						deviceId,
-						fileId,
-						file.name,
-						getRefinedType(name, file.type),
-						url,
-						x,
-						y
+				storageRef.snapshot.ref
+					.getDownloadURL()
+					.then((url) =>
+						addFileToDb(
+							activeCollectionId,
+							deviceId,
+							fileId,
+							file.name,
+							getRefinedType(name, file.type),
+							url,
+							x,
+							y
+						)
 					);
-				});
 			}
 		);
 	}
@@ -89,6 +103,8 @@ function UploadPanel({
 
 	function onDrop(file, e) {
 		const _fileId = generateId();
+
+		console.log(getRefinedType(file[0].type));
 
 		addFilesToStage({
 			[`${_fileId}`]: {
@@ -107,6 +123,7 @@ function UploadPanel({
 
 		setTimeout(
 			() =>
+				settings.myStageVisible &&
 				uploadFile(
 					file[0],
 					getRefinedType(file[0].type),

@@ -53,6 +53,7 @@ export const stashPanelGlobalState = {
 
 	settings: {
 		isOpen: false,
+		myStageVisible: false,
 	},
 };
 
